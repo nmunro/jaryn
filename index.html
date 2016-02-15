@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jaryn</title>
+  </head>
+  <body>
+    <div id="moodStatus">
+      <label for="mood">Mood:&nbsp;<span id="moodValue"></span></label><br/>
+      <input id="mood" name="mood" value="5" type="range" min="0" max="10" step="1"></input>  
+    </div>
+    <div id="feelingStatus">
+      <input id="positive" class="feeling" type="checkbox">Positive</input><br/>
+      <input id="alert" class="feeling" type="checkbox">Alert</input><br/>
+      <input id="bored" class="feeling" type="checkbox">Bored</input><br/>
+      <input id="confident" class="feeling" type="checkbox">Confident</input><br/>
+      <input id="frustrated" class="feeling" type="checkbox">Frustrated</input><br/>
+      <input id="relaxed" class="feeling" type="checkbox">Relaxed</input><br/>
+      <input id="ok" class="feeling" type="checkbox">Ok/Fine</input><br/>
+      <input id="angry" class="feeling" type="checkbox">Angry</input><br/>
+      <input id="happy" class="feeling" type="checkbox">Happy</input><br/>
+      <input id="sad" class="feeling" type="checkbox">Sad</input><br/>
+      <input id="stressed" class="feeling" type="checkbox">Stressed</input><br/>
+      <input id="tired" class="feeling" type="checkbox">Tired</input><br/>
+      <input id="none" class="feeling" type="checkbox">None</input><br/>
+    </div>
+    <input id="submitStatus" type="submit"></input>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody id="tb"></tbody>
+    </table>
+    <script src="app.js"></script>
+    <script>
+      const jaryn = new Jaryn();
+      jaryn.UI.setMood();
+      jaryn.DB.loadRecords();
+      
+      document.getElementById("mood").addEventListener("change", jaryn.UI.setMood);
+      document.getElementById("submitStatus").addEventListener("click", jaryn.UI.submitStatus);
+    </script>
+  </body>
+</html>
