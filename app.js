@@ -30,9 +30,11 @@ Jaryn.prototype.UI = {
   },
   
   "submitStatus": () => {
-    const feelings = Array.from(document.getElementsByClassName("feeling")).filter((element) => element.checked);
     const mood = document.getElementById("mood").value;
-    console.log({"mood": mood, "feelings": feelings});
+    const feelingScore = Array.from(document.getElementsByClassName("feeling")).map((element) => {
+      return Number(element.checked) ? Number(element.getAttribute("data-mood")): 0;
+    }).reduce((prev, cur) => prev + cur);
+    console.log({"mood": Number(mood), "feelings": Number(feelingScore)});
   }
 };
 
