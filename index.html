@@ -15,7 +15,7 @@
       <input id="confident" class="feeling" type="checkbox" data-mood="1">Confident</input><br/>
       <input id="frustrated" class="feeling" type="checkbox" data-mood="-1">Frustrated</input><br/>
       <input id="relaxed" class="feeling" type="checkbox" data-mood="1">Relaxed</input><br/>
-      <input id="ok" class="feeling" type="checkbox" data-mood="1">Ok/Fine</input><br/>
+      <input id="ok" class="feeling" type="checkbox" data-mood="0">Ok/Fine</input><br/>
       <input id="angry" class="feeling" type="checkbox" data-mood="-1">Angry</input><br/>
       <input id="happy" class="feeling" type="checkbox" data-mood="1">Happy</input><br/>
       <input id="sad" class="feeling" type="checkbox" data-mood="-1">Sad</input><br/>
@@ -29,7 +29,7 @@
         <tr>
           <th>ID</th>
           <th>Date</th>
-          <th>Data</th>
+          <th>Mood Score</th>
         </tr>
       </thead>
       <tbody id="tb"></tbody>
@@ -38,7 +38,7 @@
     <script>
       const jaryn = new Jaryn();
       jaryn.UI.setMood();
-      jaryn.DB.loadRecords();
+      jaryn.UI.loadRecords();
       
       document.getElementById("mood").addEventListener("change", jaryn.UI.setMood);
       document.getElementById("submitStatus").addEventListener("click", jaryn.UI.submitStatus);

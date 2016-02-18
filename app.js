@@ -1,6 +1,7 @@
 const Jaryn = function() { return(this === window) ? new Jaryn() : this; };
 
 Jaryn.prototype.UI = {
+  "loadRecords": () => Jaryn.prototype.DB.getRecords().forEach(Jaryn.prototype.UI.addRecord),
   "addRecord": (record) => {
     const tb = document.getElementById('tb');
     const tr = document.createElement('tr');
@@ -10,7 +11,7 @@ Jaryn.prototype.UI = {
     
     id.innerHTML = record.id;
     date.innerHTML = record.date;
-    data.innerHTML = "Nothing yet!";
+    data.innerHTML = "No score recorded!";
     
     tr.appendChild(id);
     tr.appendChild(date);
@@ -30,34 +31,35 @@ Jaryn.prototype.UI = {
   },
   
   "submitStatus": () => {
-    const mood = document.getElementById("mood").value;
-    const feelingScore = Array.from(document.getElementsByClassName("feeling")).map((element) => {
-      return Number(element.checked) ? Number(element.getAttribute("data-mood")): 0;
-    }).reduce((prev, cur) => prev + cur);
-    console.log({"mood": Number(mood), "feelings": Number(feelingScore)});
+    const mood = Number(document.getElementById("mood").value);
+    const nodes = Array.from(document.getElementsByClassName("feeling"));
+    
+    const feelingScore = nodes.map((element) => {
+      return (element.checked) ? Number(element.getAttribute("data-mood")) : 0;
+    }).reduce((prev, cur) => {
+      return prev + cur;
+    });
+    
+    console.log("Score: " + (mood + feelingScore));
   }
 };
 
 Jaryn.prototype.DB = {
-  "loadRecord": (id) => JSON.parse(localStorage.getItem(id)),
+  "indexTable": "indexTable",
   
-  "loadRecords": () => Jaryn.prototype.DB.getAll().forEach(Jaryn.prototype.UI.addRecord),
+  "getTable": (name) => JSON.parse(localStorage.getItem(name)) || [],
+  
+  "getRecord": (id) => JSON.parse(localStorage.getItem(id)),
+  
+  "getRecords": () => Jaryn.prototype.DB.getTable(Jaryn.prototype.DB.indexTable).map((id) => JSON.parse(localStorage.getItem(id))),
   
   "deleteRecord": (id) => localStorage.removeItem(id),
   
-  "deleteAll": () => {
-    localStorage.clear();
-    Jaryn.prototype.UI.removeAllRecords();
-  },
+  "deleteAll": () => { localStorage.clear(); },
   
-  "getAll": () => {
-    const ids = JSON.parse(localStorage.getItem("indexTable")) || [];
-    return ids.map((id) => JSON.parse(localStorage.getItem(id)));
-  },
-  
-  "save": (record) => {
+  "setRecord": (record) => {
     const date = new Date();
-    const indexTable = JSON.parse(localStorage.getItem("indexTable")) || [];
+    const indexTable = Jaryn.prototype.DB.getTable(Jaryn.prototype.DB.indexTable);
     
     record.id = date.getTime();
     record.date = date.toDateString();
@@ -70,5 +72,5 @@ Jaryn.prototype.DB = {
   },
   
   "toJSON": () => console.log("Unimplemented!"),
-  "sync": () => console.log("Unimplemented!") 
+  "syncRecords": () => console.log("Unimplemented!") 
 };
