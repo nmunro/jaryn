@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Jaryn</title>
+    <link rel="Stylesheet" type="text/css" href="app.css">
   </head>
   <body>
     <div id="moodStatus">
@@ -21,10 +22,9 @@
       <input id="sad" class="feeling" type="checkbox" data-mood="-1">Sad</input><br/>
       <input id="stressed" class="feeling" type="checkbox" data-mood="-1">Stressed</input><br/>
       <input id="tired" class="feeling" type="checkbox" data-mood="-1">Tired</input><br/>
-      <input id="none" class="feeling" type="checkbox" data-mood="0">None</input><br/>
     </div>
     <input id="submitStatus" type="submit"></input>
-    <table>
+    <table id="data" class="table invisible">
       <thead>
         <tr>
           <th>ID</th>
@@ -34,14 +34,7 @@
       </thead>
       <tbody id="tb"></tbody>
     </table>
+    <script src="jaryn.js"></script>
     <script src="app.js"></script>
-    <script>
-      const jaryn = new Jaryn();
-      jaryn.UI.setMood();
-      jaryn.UI.loadRecords();
-      
-      document.getElementById("mood").addEventListener("change", jaryn.UI.setMood);
-      document.getElementById("submitStatus").addEventListener("click", jaryn.UI.submitStatus);
-    </script>
   </body>
 </html>
