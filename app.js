@@ -1,6 +1,6 @@
 (function() {
-  /*const jaryn = new Jaryn();
-  jaryn.UI.init();*/
+  const jaryn = new Jaryn();
+  jaryn.init();
   
   const showNav = (nav) => nav.setAttribute("class", "navLink active");
   const hideNav = (nav) => nav.setAttribute("class", "navLink");
