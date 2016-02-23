@@ -31,17 +31,15 @@
     const mood = document.createElement('td');
     const feelings = document.createElement('td');
     const notes = document.createElement('td');
+    var year = 0;
+    var month = 0;
+    var day = 0;
     
     id.innerHTML = obj.id;
-    if((obj.date.getMonth()+1) < 10) 
-      date.innerHTML = obj.date.getFullYear() + "/0" + (obj.date.getMonth() +1) + "/" + obj.date.getDate();
-    else 
-      date.innerHTML = obj.date.getFullYear() + "/" + (obj.date.getMonth() +1) + "/" + obj.date.getDate();
-    
-    if(obj.date.getDate() < 10) 
-      date.innerHTML = obj.date.getFullYear() + "/0" + (obj.date.getMonth() +1) + "/0" + obj.date.getDate();
-    else
-      date.innerHTML = obj.date.getFullYear() + "/" + (obj.date.getMonth() +1) + "/" + obj.date.getDate();
+    year = obj.date.getFullYear();
+    month = (obj.date.getMonth() + 1 < 10) ? "0" + (obj.date.getMonth() + 1) : obj.date.getMonth + 1;
+    day = (obj.date.getDate() < 10) ? "0" + obj.date.getDate(): obj.date.getDate();
+    date.innerHTML = year + "/" + month + "/" + day;
       
     mood.innerHTML = obj.mood;
     feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
