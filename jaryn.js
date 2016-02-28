@@ -18,21 +18,25 @@ Jaryn.prototype.io = Object.freeze({
       fileEntry.file((file) => {
         const fileReader = new FileReader();
         fileReader.onload = function(e) {
-          cb(JSON.parse(fileReader.result));
+          if(fileReader.result === "") {
+            Jaryn.prototype.io.writeHistory([], () => cb(JSON.parse(fileReader.result)));
+          }
+          else {
+            cb(JSON.parse(fileReader.result));
+          }
         };
         fileReader.readAsText(file);
       });
     });
   },
 
-  "writeHistory": (data) => {
+  "writeHistory": (data, cb) => {
     Jaryn.prototype.io.operation((file) => {
-      chrome.syncFileSystem.requestFileSystem((fs) => {
-        file.createWriter((writer) => {
-          const blob = new Blob([JSON.stringify(data)], {"type": "text/plain"});
-          writer.write(blob);
-        }, fail);
-      });
+      file.createWriter((writer) => {
+        const blob = new Blob([JSON.stringify(data)], { "type": "text/plain" });
+        writer.write(blob);
+        if(cb !== undefined) cb();
+      }, (err) => console.log(`Error: ${err}.`));
     });
   }
 });
