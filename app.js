@@ -1,15 +1,15 @@
 (function() {
   const jaryn = Jaryn();
-  const tbody = document.getElementById("historyTable");  
+  const tbody = document.getElementById("historyTable");
   const showNav = (nav) => nav.setAttribute("class", "navLink active");
   const hideNav = (nav) => nav.setAttribute("class", "navLink");
-  const showDiv = (div) => div.setAttribute("class", "contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main");  
-  const hideDiv = (div) => div.setAttribute("class", "contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible");  
+  const showDiv = (div) => div.setAttribute("class", "contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main");
+  const hideDiv = (div) => div.setAttribute("class", "contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible");
   const toggleDiv = (div) => {
     Array.from(document.getElementsByClassName("contentDiv")).forEach(hideDiv);
     showDiv(div);
-  };   
-  
+  };
+
   Array.from(document.getElementsByClassName("contentDiv")).forEach((div) => {
     div.addEventListener("click", (e) => toggleDiv(div));
   });
@@ -22,30 +22,32 @@
       showNav(e.target.parentNode);
     });
   });
-  
-  jaryn.init();
-  jaryn.getHistory().forEach((obj) => {
-    const row = document.createElement('tr');
-    const id = document.createElement('td');
-    const date = document.createElement('td');
-    const mood = document.createElement('td');
-    const feelings = document.createElement('td');
-    const notes = document.createElement('td');
-    const year = obj.date.getFullYear();
-    const month = (obj.date.getMonth() + 1 < 10) ? "0" + (obj.date.getMonth() + 1) : obj.date.getMonth + 1;
-    const day = (obj.date.getDate() < 10) ? "0" + obj.date.getDate() : obj.date.getDate();
-    
-    id.innerHTML = obj.id;
-    date.innerHTML = day + "/" + month + "/" + year;
-    mood.innerHTML = obj.mood;
-    feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
-    notes.innerHTML = obj.notes;
-    
-    row.appendChild(id);
-    row.appendChild(date);
-    row.appendChild(mood);
-    row.appendChild(feelings);
-    row.appendChild(notes);
-    tbody.appendChild(row);
+
+  jaryn.io.readHistory((data) => {
+    data.forEach((obj) => {
+      const row = document.createElement('tr');
+      const id = document.createElement('td');
+      const date = document.createElement('td');
+      const mood = document.createElement('td');
+      const feelings = document.createElement('td');
+      const notes = document.createElement('td');
+      const dt = new Date(obj.date);
+      const year = dt.getFullYear();
+      const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth + 1;
+      const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
+
+      id.innerHTML = obj.id;
+      date.innerHTML = + "/" + month + "/" + year;
+      mood.innerHTML = obj.mood;
+      feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
+      notes.innerHTML = obj.notes;
+
+      row.appendChild(id);
+      row.appendChild(date);
+      row.appendChild(mood);
+      row.appendChild(feelings);
+      row.appendChild(notes);
+      tbody.appendChild(row);
+    });
   });
 }());
