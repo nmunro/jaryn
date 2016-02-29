@@ -22,7 +22,7 @@ Jaryn.prototype.io = Object.freeze({
             Jaryn.prototype.io.writeHistory([], () => cb(JSON.parse(fileReader.result)));
           }
           else {
-            cb(JSON.parse(fileReader.result));
+            if(cb !== undefined) cb(JSON.parse(fileReader.result));
           }
         };
         fileReader.readAsText(file);

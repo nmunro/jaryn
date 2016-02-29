@@ -33,11 +33,11 @@
       const notes = document.createElement('td');
       const dt = new Date(obj.date);
       const year = dt.getFullYear();
-      const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth + 1;
+      const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
       const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
 
       id.innerHTML = obj.id;
-      date.innerHTML = + "/" + month + "/" + year;
+      date.innerHTML = day + "/" + month + "/" + year;
       mood.innerHTML = obj.mood;
       feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
       notes.innerHTML = obj.notes;
