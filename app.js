@@ -1,6 +1,5 @@
 (function() {
   const jaryn = Jaryn();
-  const tbody = document.getElementById("historyTable");
   const showNav = (nav) => nav.setAttribute("class", "navLink active");
   const hideNav = (nav) => nav.setAttribute("class", "navLink");
   const showDiv = (div) => div.setAttribute("class", "contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main");
@@ -24,6 +23,10 @@
   });
 
   jaryn.io.readHistory((data) => {
+    const tbody = document.getElementById("historyTable");
+    const averageMood = document.getElementById("averageMood");
+    var average = 0;
+    
     data.forEach((obj) => {
       const row = document.createElement('tr');
       const id = document.createElement('td');
@@ -39,6 +42,7 @@
       id.innerHTML = obj.id;
       date.innerHTML = day + "/" + month + "/" + year;
       mood.innerHTML = obj.mood;
+      average += obj.mood;
       feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
       notes.innerHTML = obj.notes;
 
@@ -49,5 +53,7 @@
       row.appendChild(notes);
       tbody.appendChild(row);
     });
+    average /= data.length;
+    averageMood.innerHTML = average;
   });
 }());
