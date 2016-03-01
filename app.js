@@ -1,9 +1,9 @@
 (function() {
   const jaryn = Jaryn();
-  const showNav = (nav) => nav.setAttribute("class", "navLink active");
-  const hideNav = (nav) => nav.setAttribute("class", "navLink");
-  const showDiv = (div) => div.setAttribute("class", "contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main");
-  const hideDiv = (div) => div.setAttribute("class", "contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible");
+  const showNav = (nav) => nav.classList.add("active");
+  const hideNav = (nav) => nav.classList.remove("active");
+  const showDiv = (div) => div.classList.remove("invisible");
+  const hideDiv = (div) => div.classList.add("invisible");
   const toggleDiv = (div) => {
     Array.from(document.querySelectorAll(".contentDiv")).forEach(hideDiv);
     showDiv(div);
@@ -41,7 +41,7 @@
     const moods = document.querySelector("#averageMood");
     const emotions = document.querySelector("#averageEmotions");
     var averageMood = 0;
-    var averageEmotions = [];
+    var averageEmotions = {};
     
     data.forEach((obj) => {
       const row = document.createElement('tr');
@@ -59,7 +59,12 @@
       date.innerHTML = day + "/" + month + "/" + year;
       mood.innerHTML = obj.mood;
       averageMood += obj.mood;
-      averageEmotions.push(obj.feelings);
+      obj.feelings.forEach((emotion) => {
+        if(averageEmotions[emotion] !== undefined)
+          averageEmotions[emotion] = averageEmotions[emotion] + 1;
+        else
+          averageEmotions[emotion] = 1;
+      });
       feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
       notes.innerHTML = obj.notes;
 
@@ -73,6 +78,9 @@
     
     averageMood /= data.length;
     moods.innerHTML = averageMood;
-    emotions.innerHTML = averageEmotions.join(", ");
+    Object.keys(averageEmotions).forEach((emotion) => {
+      console.log(emotion + ": " + averageEmotions[emotion]);  
+    });
+    //emotions.innerHTML = averageEmotions.join(", ");
   });
 }());
