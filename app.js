@@ -8,22 +8,27 @@
     Array.from(document.querySelectorAll(".contentDiv")).forEach(hideDiv);
     showDiv(div);
   };
-  const setDate = (() => {
+  const setDate = () => {
     const now = new Date();
     const date = document.querySelector("#date");
-    var month = now.getMonth()+1;
-    var day = now.getDate();
-    
-    if(month < 10) month = "" + 0 + month;
-    if(day < 10) day = "" + 0 + day;
+    const month = ((now.getMonth() +1)< 10) ? "" + 0 + (now.getMonth()+1) : now.getMonth()+1;
+    const day = (now.getDate() < 10) ? "" + 0 + now.getDate() : now.getDate();
       
     date.innerHTML = day + "/" + month + "/" + now.getFullYear();
-  });
+  };
   
-  setDate();
+  // Update mood value.
+  const setMoodValue = (value) =>{
+    document.getElementById('moodValue').innerHTML = value;
+  };
 
+  // Add event handlers.
   Array.from(document.querySelectorAll(".contentDiv")).forEach((div) => {
     div.addEventListener("click", (e) => toggleDiv(div));
+  });
+  
+  document.getElementById('mood').addEventListener('change', (event) => {
+    setMoodValue(event.target.value);
   });
 
   Array.from(document.getElementsByClassName("navLink")).forEach((nav) => {
@@ -34,9 +39,12 @@
       showNav(e.target.parentNode);
     });
   });
+  
+  setDate();
+  setMoodValue("5");
 
   // Populate history table.
-  jaryn.io.readHistory((data) => {
+  jaryn.vfs.getFile("jaryn.json", (data) => {
     const tbody = document.querySelector("#historyTable");
     const moods = document.querySelector("#averageMood");
     const emotions = document.querySelector("#averageEmotions");

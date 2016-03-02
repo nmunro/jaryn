@@ -1,37 +1,56 @@
-const Jaryn = function() {
-  return(this === window) ? new Jaryn() : this;
-};
+const Jaryn = function() { return(this === window) ? new Jaryn() : this; };
 
-Jaryn.prototype.io = Object.freeze({
+
+Jaryn.prototype.error = Object.freeze({
+  "printError": ((error) => console.log(`Error: ${error}`))
+});
+
+Jaryn.prototype.permissions = Object.freeze({
+  "create": { "create": true },
+  "notCreate": { "create": false }
+});
+
+Jaryn.prototype.vfs = Object.freeze({
   "operation": ((cb) => {
     const name = "jaryn.json";
-    const permissions = { "create": true };
-    const fail = ((error) => console.log(`Error: ${error}`));
+    const ops =  Jaryn.prototype.permissions.create;
+    const err = Jaryn.prototype.error.printError;
 
-    chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile(name, permissions, cb, fail);
-    });
+    chrome.syncFileSystem.requestFileSystem((fs) =>
+      fs.root.getFile(name, ops, cb, err));
   }),
-
-  "readHistory": (cb) => {
-    Jaryn.prototype.io.operation((fileEntry) => {
-      fileEntry.file((file) => {
-        const fileReader = new FileReader();
-        fileReader.onload = function(e) {
-          if(fileReader.result === "") {
-            Jaryn.prototype.io.writeHistory([], () => cb(JSON.parse(fileReader.result)));
-          }
-          else {
-            if(cb !== undefined) cb(JSON.parse(fileReader.result));
-          }
-        };
-        fileReader.readAsText(file);
-      });
+  
+  /**
+   * getDataFile gets the data file for the given month/year and executes the 
+   * given callback.
+   * 
+   * @param month 
+   * @param year
+   * @param cb
+   */
+  "getFile": (name, cb) => {
+    chrome.syncFileSystem.requestFileSystem((fs) => {
+      const perms = Jaryn.prototype.permissions.create;
+      const err = Jaryn.prototype.error.printError;
+      
+      console.log(`Attempting to open: ${name}.`);
+      fs.root.getFile(name,
+        perms,
+        (fileEntry) => {
+          fileEntry.file((file) => {
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+              if(cb !== undefined) cb(JSON.parse(fileReader.result));
+            };
+            fileReader.readAsText(file);
+          });  
+        },
+        err);    
     });
   },
-
+  
   "writeHistory": (data, cb) => {
-    Jaryn.prototype.io.operation((file) => {
+    Jaryn.prototype.vfs.operation((file) => {
       file.createWriter((writer) => {
         const blob = new Blob([JSON.stringify(data)], { "type": "text/plain" });
         writer.write(blob);
@@ -41,6 +60,7 @@ Jaryn.prototype.io = Object.freeze({
   }
 });
 
+// Everything down here is to be deleted later!
 // This only returns dummy data right now.
 Jaryn.prototype.getHistory = function() {
   const today = new Date();

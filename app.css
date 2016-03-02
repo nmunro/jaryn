@@ -1,3 +1,8 @@
 .invisible {
   display: none;
 }
+
+#notes {
+  height: 100%;
+  width: 100%;
+}
