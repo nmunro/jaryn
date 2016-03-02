@@ -1,3 +1,5 @@
+// If it touches the DOM it belongs here, don't pass any DOM
+// manipulation into Jaryn.js, callbacks are ok thought.
 (function() {
   const jaryn = Jaryn();
   const showNav = (nav) => nav.classList.add("active");

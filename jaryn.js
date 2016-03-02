@@ -11,14 +11,18 @@ Jaryn.prototype.permissions = Object.freeze({
 });
 
 Jaryn.prototype.vfs = Object.freeze({
-  "operation": ((cb) => {
-    const name = "jaryn.json";
-    const ops =  Jaryn.prototype.permissions.create;
-    const err = Jaryn.prototype.error.printError;
-
-    chrome.syncFileSystem.requestFileSystem((fs) =>
-      fs.root.getFile(name, ops, cb, err));
-  }),
+  /**
+   * Convenience function to get the current data file.
+   * @param function cb Call back to execute once data is loaded. 
+   */
+  "getThisMonthsFile": (cb) => {
+    const date = new Date();
+    const month = date.getMonth()+1;
+    const year = date.getFullYear();
+    const name = month + "-" + year + ".json";
+    
+    Jaryn.prototype.vfs.getFile(name, cb);
+  },
   
   /**
    * getDataFile gets the data file for the given month/year and executes the 
@@ -33,7 +37,6 @@ Jaryn.prototype.vfs = Object.freeze({
       const perms = Jaryn.prototype.permissions.create;
       const err = Jaryn.prototype.error.printError;
       
-      console.log(`Attempting to open: ${name}.`);
       fs.root.getFile(name,
         perms,
         (fileEntry) => {
@@ -49,41 +52,70 @@ Jaryn.prototype.vfs = Object.freeze({
     });
   },
   
-  "writeHistory": (data, cb) => {
-    Jaryn.prototype.vfs.operation((file) => {
-      file.createWriter((writer) => {
-        const blob = new Blob([JSON.stringify(data)], { "type": "text/plain" });
-        writer.write(blob);
-        if(cb !== undefined) cb();
-      }, (err) => console.log(`Error: ${err}.`));
-    });
+  /**
+   * This writes data to the specified file, creating it if it does not exist.
+   * Ensure data is a JSON object!
+   * @param file File name to write to.
+   * @param data JSON to  stringify and write.
+   * @param cb Callback to execute on write.
+   */
+  "writeData": (file, data, cb) => {
+    const ops =  Jaryn.prototype.permissions.create;
+    const err = Jaryn.prototype.error.printError;
+    
+    chrome.syncFileSystem.requestFileSystem((fs) => {
+      fs.root.getFile(file,
+      ops,
+      (file) => {
+        file.createWriter((writer) => {
+          const blob = new Blob([JSON.stringify(data)], { "type": "text/plain" });
+          writer.write(blob);
+          if(cb !== undefined) cb();
+        });
+      },
+      err);
+    }); 
   }
 });
 
-// Everything down here is to be deleted later!
-// This only returns dummy data right now.
-Jaryn.prototype.getHistory = function() {
-  const today = new Date();
-  var yesterday = new Date();
-  yesterday.setDate(today.getDate() -1);
-
-  return Object.freeze([{
-    "id": today.getTime(),
-    "date": today,
-    "mood": 5,
-    "feelings": [
-      "ok/fine"
-    ],
-    "notes": "Lorim ipsom"
+// Testing function
+Jaryn.prototype.testing = Object.freeze({
+  "writeDummyDataFile": () => {
+    const file = "dummy.json";
+    const data = Jaryn.prototype.testing.generateDummyData();   
+    Jaryn.prototype.vfs.writeData(file, JSON.stringify(data), () => {
+      console.log(`Wrote ${data} to ${file}.`);  
+    }); 
   },
-  {
-    "id": yesterday.getTime(),
-    "date": yesterday,
-    "mood": 5,
-    "feelings": [
-      "ok/fine",
-      "tired"
-    ],
-    "notes": "Lorim ipsom"
-  }]);
-};
+  
+  // Fill this in later.
+  "readDummyDataFile": () => {
+    
+  },
+  
+  "generateDummyData": () => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() -1);
+  
+    return Object.freeze([{
+      "id": today.getTime(),
+      "date": today,
+      "mood": 5,
+      "feelings": [
+        "ok/fine"
+      ],
+      "notes": "Lorim ipsom"
+    },
+    {
+      "id": yesterday.getTime(),
+      "date": yesterday,
+      "mood": 5,
+      "feelings": [
+        "ok/fine",
+        "tired"
+      ],
+      "notes": "Lorim ipsom"
+    }]); 
+  }  
+});
