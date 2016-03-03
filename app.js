@@ -1,49 +1,68 @@
 // If it touches the DOM it belongs here, don't pass any DOM
-// manipulation into Jaryn.js, callbacks are ok thought.
-(function() {
-  const jaryn = Jaryn();
-  const showNav = (nav) => nav.classList.add("active");
-  const hideNav = (nav) => nav.classList.remove("active");
-  const showDiv = (div) => div.classList.remove("invisible");
-  const hideDiv = (div) => div.classList.add("invisible");
-  const toggleDiv = (div) => {
-    Array.from(document.querySelectorAll(".contentDiv")).forEach(hideDiv);
-    showDiv(div);
-  };
-  const setDate = () => {
+// manipulation into Jaryn.js, callbacks are ok though.
+
+const App = function() { return(this === window) ? new App() : this; };
+
+App.prototype.DOM = {
+  "showNav": (nav) => nav.classList.add("active"),
+  "hideNav": (nav) => nav.classList.remove("active"),
+  "showDiv": (div) => div.classList.remove("invisible"),
+  "hideDiv": (div) => div.classList.add("invisible"),
+  "toggleDiv": (div) => {
+    const nodes = Array.from(document.querySelectorAll(".contentDiv"));
+    nodes.forEach(App.prototype.DOM.hideDiv);
+    App.prototype.DOM.showDiv(div);
+  },
+  "setDate": () => {
     const now = new Date();
     const date = document.querySelector("#date");
     const month = ((now.getMonth() +1)< 10) ? "" + 0 + (now.getMonth()+1) : now.getMonth()+1;
     const day = (now.getDate() < 10) ? "" + 0 + now.getDate() : now.getDate();
       
     date.innerHTML = day + "/" + month + "/" + now.getFullYear();
-  };
-  
-  // Update mood value.
-  const setMoodValue = (value) => {
+  },
+  "setMoodValue": (value) => {
     document.getElementById('moodValue').innerHTML = value;
-  };
-
-  // Add event handlers.
-  Array.from(document.querySelectorAll(".contentDiv")).forEach((div) => {
-    div.addEventListener("click", (e) => toggleDiv(div));
-  });
-  
-  document.getElementById('mood').addEventListener('change', (event) => {
-    setMoodValue(event.target.value);
-  });
-
-  Array.from(document.getElementsByClassName("navLink")).forEach((nav) => {
-    nav.addEventListener("click", (e) => {
-      Array.from(document.querySelectorAll(".contentDiv")).forEach(hideDiv);
-      Array.from(document.querySelectorAll(".navLink")).forEach(hideNav);
-      showDiv(document.querySelector("#" + nav.firstChild.getAttribute("data-target")));
-      showNav(e.target.parentNode);
+  },
+  "connectEventHandlers": () => {
+     // Save button event handler.
+    document.getElementById("save").addEventListener("click", () => {
+      console.log("Saving!");  
     });
-  });
+
+    // Add event handlers.
+    Array.from(document.querySelectorAll(".contentDiv")).forEach((div) => {
+      div.addEventListener("click", (e) => App.prototype.DOM.toggleDiv(div));
+    });
   
-  setDate();
-  setMoodValue("5");
+    document.getElementById('mood').addEventListener('change', (event) => {
+      App.prototype.DOM.setMoodValue(event.target.value);
+    });
+
+    Array.from(document.getElementsByClassName("navLink")).forEach((nav) => {
+      nav.addEventListener("click", (e) => {
+        const contentNodes = Array.from(document.querySelectorAll(".contentDiv"));
+        const navNodes = Array.from(document.querySelectorAll(".navLink"));
+        const target = nav.firstChild.getAttribute("data-target");
+        
+        contentNodes.forEach(App.prototype.DOM.hideDiv);
+        navNodes.forEach(App.prototype.DOM.hideNav);
+        
+        App.prototype.DOM.showDiv(document.querySelector("#" + target));
+        App.prototype.DOM.showNav(e.target.parentNode);
+      });
+    }); 
+  }
+};
+
+
+(function() {
+  const app = App();
+  const jaryn = Jaryn();
+  
+  app.DOM.setDate();
+  app.DOM.setMoodValue("5");
+  app.DOM.connectEventHandlers();
 
   // Populate history table.
   jaryn.vfs.readJSON("jaryn.json", (data) => {

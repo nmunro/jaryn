@@ -10,6 +10,7 @@ Jaryn.prototype.permissions = Object.freeze({
   "notCreate": { "create": false }
 });
 
+// Virtual file system layer to google drive.
 Jaryn.prototype.vfs = Object.freeze({
   /**
    * Convenience function to get the current data file.
