@@ -32,9 +32,9 @@ Jaryn.prototype.vfs = Object.freeze({
    * @param year
    * @param cb
    */
-  "getFile": (name, cb) => {
+  "readJSON": (name, cb) => {
     chrome.syncFileSystem.requestFileSystem((fs) => {
-      const perms = Jaryn.prototype.permissions.create;
+      const perms = Jaryn.prototype.permissions.notcreate;
       const err = Jaryn.prototype.error.printError;
       
       fs.root.getFile(name,
@@ -59,7 +59,7 @@ Jaryn.prototype.vfs = Object.freeze({
    * @param data JSON to  stringify and write.
    * @param cb Callback to execute on write.
    */
-  "writeData": (file, data, cb) => {
+  "writeJSON": (file, json, cb) => {
     const ops =  Jaryn.prototype.permissions.create;
     const err = Jaryn.prototype.error.printError;
     
@@ -68,7 +68,7 @@ Jaryn.prototype.vfs = Object.freeze({
       ops,
       (file) => {
         file.createWriter((writer) => {
-          const blob = new Blob([JSON.stringify(data)], { "type": "text/plain" });
+          const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
           writer.write(blob);
           if(cb !== undefined) cb();
         });
@@ -83,14 +83,17 @@ Jaryn.prototype.testing = Object.freeze({
   "writeDummyDataFile": () => {
     const file = "dummy.json";
     const data = Jaryn.prototype.testing.generateDummyData();   
-    Jaryn.prototype.vfs.writeData(file, JSON.stringify(data), () => {
+    Jaryn.prototype.vfs.writeJSON(file, data, () => {
       console.log(`Wrote ${data} to ${file}.`);  
     }); 
   },
   
   // Fill this in later.
   "readDummyDataFile": () => {
-    
+    const file = "dummy.json";
+    Jaryn.prototype.vfs.readJSON(file, (data) => {
+      console.log(`Read ${file} and got:\n${data}.`);
+    });
   },
   
   "generateDummyData": () => {

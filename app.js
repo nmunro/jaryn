@@ -46,7 +46,7 @@
   setMoodValue("5");
 
   // Populate history table.
-  jaryn.vfs.getFile("jaryn.json", (data) => {
+  jaryn.vfs.readJSON("jaryn.json", (data) => {
     const tbody = document.querySelector("#historyTable");
     const moods = document.querySelector("#averageMood");
     const emotions = document.querySelector("#averageEmotions");
