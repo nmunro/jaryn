@@ -25,7 +25,17 @@ const App = Object.create({
   "connectEventHandlers": function() {
      // Save button event handler.
     document.getElementById("save").addEventListener("click", () => {
-      console.log("Saving!");  
+      const mood = document.getElementById("mood").value;
+      const notes = document.getElementById("notes").value;
+      const nodes = document.getElementsByClassName("emotion");
+      const emotions = Array.from(nodes).filter((node) => node.checked);
+      const data = { "mood": "", "emotions": [], "notes": "" };
+      
+      data.mood = mood;
+      data.notes = notes;
+      data.emotions = emotions.map((node) => node.id); 
+      
+      console.log(data);
     });
 
     // Add event handlers.
