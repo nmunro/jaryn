@@ -15,13 +15,13 @@ Jaryn.prototype.vfs = Object.freeze({
    * Convenience function to get the current data file.
    * @param function cb Call back to execute once data is loaded. 
    */
-  "getThisMonthsFile": (cb) => {
+  "getThisMonthsJSON": (cb) => {
     const date = new Date();
     const month = date.getMonth()+1;
     const year = date.getFullYear();
     const name = month + "-" + year + ".json";
     
-    Jaryn.prototype.vfs.getFile(name, cb);
+    Jaryn.prototype.vfs.readJSON(name, cb);
   },
   
   /**
