@@ -1,19 +1,17 @@
 // If it touches the DOM it belongs here, don't pass any DOM
 // manipulation into Jaryn.js, callbacks are ok though.
 
-const App = function() { return(this === window) ? new App() : this; };
-
-App.prototype = {
-  "showNav": (nav) => nav.classList.add("active"),
-  "hideNav": (nav) => nav.classList.remove("active"),
-  "showDiv": (div) => div.classList.remove("invisible"),
-  "hideDiv": (div) => div.classList.add("invisible"),
-  "toggleDiv": (div) => {
+const App = Object.create({
+  "showNav": function(nav) { nav.classList.add("active"); },
+  "hideNav": function(nav) { nav.classList.remove("active"); },
+  "showDiv": function(div) { div.classList.remove("invisible"); },
+  "hideDiv": function(div) { div.classList.add("invisible"); },
+  "toggleDiv": function(div) {
     const nodes = Array.from(document.querySelectorAll(".contentDiv"));
-    nodes.forEach(App.prototype.hideDiv);
-    App.prototype.showDiv(div);
+    nodes.forEach(this.hideDiv);
+    this.showDiv(div);
   },
-  "setDate": () => {
+  "setDate": function() {
     const now = new Date();
     const date = document.querySelector("#date");
     const month = ((now.getMonth() +1)< 10) ? "" + 0 + (now.getMonth()+1) : now.getMonth()+1;
@@ -21,10 +19,10 @@ App.prototype = {
       
     date.innerHTML = day + "/" + month + "/" + now.getFullYear();
   },
-  "setMoodValue": (value) => {
+  "setMoodValue": function(value) {
     document.getElementById('moodValue').innerHTML = value;
   },
-  "connectEventHandlers": () => {
+  "connectEventHandlers": function() {
      // Save button event handler.
     document.getElementById("save").addEventListener("click", () => {
       console.log("Saving!");  
@@ -32,11 +30,11 @@ App.prototype = {
 
     // Add event handlers.
     Array.from(document.querySelectorAll(".contentDiv")).forEach((div) => {
-      div.addEventListener("click", (e) => App.prototype.toggleDiv(div));
+      div.addEventListener("click", (e) => this.toggleDiv(div));
     });
   
     document.getElementById('mood').addEventListener('change', (event) => {
-      App.prototype.setMoodValue(event.target.value);
+      this.setMoodValue(event.target.value);
     });
 
     Array.from(document.getElementsByClassName("navLink")).forEach((nav) => {
@@ -45,16 +43,16 @@ App.prototype = {
         const navNodes = Array.from(document.querySelectorAll(".navLink"));
         const target = nav.firstChild.getAttribute("data-target");
         
-        contentNodes.forEach(App.prototype.hideDiv);
-        navNodes.forEach(App.prototype.hideNav);
+        contentNodes.forEach(this.hideDiv);
+        navNodes.forEach(this.hideNav);
         
-        App.prototype.showDiv(document.querySelector("#" + target));
-        App.prototype.showNav(e.target.parentNode);
+        this.showDiv(document.querySelector("#" + target));
+        this.showNav(e.target.parentNode);
       });
     }); 
   },
   
-  "loadHistory": () => {
+  "loadHistory": function() {
     const jaryn = Jaryn();
     jaryn.vfs.readJSON("jaryn.json", (data) => {
       const tbody = document.querySelector("#historyTable");
@@ -103,11 +101,9 @@ App.prototype = {
       });
     });
   } 
-};
+});
 
-const app = App();
-
-app.setDate();
-app.setMoodValue("5");
-app.connectEventHandlers();
-app.loadHistory();
+App.setDate();
+App.setMoodValue("5");
+App.connectEventHandlers();
+App.loadHistory();
