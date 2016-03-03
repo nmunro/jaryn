@@ -44,12 +44,75 @@
         
         <div id="addDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
           <h1 class="page-header">Add Record</h1>
-          <label for="mood">Mood:&nbsp;<span id="moodValue"></span></label>
-          <input id="mood" name="mood" type="range" min="1" max="10" step="1" value="5"></input>
-          <label>Notes:</label>
-          <textarea id="notes"></textarea>
-          <br/>
-          <button>Save</button>
+          <div class="row">
+            <label for="mood">Mood:&nbsp;<span id="moodValue"></span></label>
+            <input id="mood" name="mood" type="range" min="1" max="10" step="1" value="5"></input>
+          </div>
+          
+          <div class="row">
+            <div class="row">
+              <label for="feelings">Feelings:&nbsp;</label>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input id="positive" type="checkbox">Positive</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input id="alert" type="checkbox">Alert</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input id="bored" type="checkbox">Bored</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input id="confident" type="checkbox">Confident</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input id="frustrated" type="checkbox">Frustrated</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input id="relaxed" type="checkbox">Relaxed</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input id="okfine" type="checkbox">Ok/Fine</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input id="angry" type="checkbox">Angry</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input id="happy" type="checkbox">Happy</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input id="sad" type="checkbox">Sad</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input id="stressed" type="checkbox">Stressed</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input id="tired" type="checkbox">Tired</input>
+              </div>
+            </div>
+            <br/> 
+          </div>
+          
+          <div class="row">
+            <label>Notes:</label>
+            <textarea id="notes"></textarea>
+            <br/>
+          </div> 
+          
+          <div class="row">
+            <button id="save">Save</button>
+          </div>
         </div>
         
         <div id="dashboardDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

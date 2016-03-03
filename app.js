@@ -20,7 +20,7 @@
   };
   
   // Update mood value.
-  const setMoodValue = (value) =>{
+  const setMoodValue = (value) => {
     document.getElementById('moodValue').innerHTML = value;
   };
 
@@ -91,6 +91,5 @@
     Object.keys(averageEmotions).forEach((emotion) => {
       console.log(emotion + ": " + averageEmotions[emotion]);  
     });
-    //emotions.innerHTML = averageEmotions.join(", ");
   });
 }());
