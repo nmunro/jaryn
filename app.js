@@ -25,17 +25,28 @@ const App = Object.create({
   "connectEventHandlers": function() {
      // Save button event handler.
     document.getElementById("save").addEventListener("click", () => {
+      const jaryn = Jaryn();
+      const now = new Date();
       const mood = document.getElementById("mood").value;
       const notes = document.getElementById("notes").value;
       const nodes = document.getElementsByClassName("emotion");
       const emotions = Array.from(nodes).filter((node) => node.checked);
-      const data = { "mood": "", "emotions": [], "notes": "" };
+      const data = {
+        "id": now.getTime(),
+        "date": now,
+        "mood": "",
+        "feelings": [], 
+        "notes": ""
+      };
       
       data.mood = mood;
       data.notes = notes;
       data.emotions = emotions.map((node) => node.id); 
       
-      console.log(data);
+      jaryn.vfs.updateJSON(data, (obj) => {
+        console.log(`Wrote ${obj}.`);
+        this.loadHistory();
+      });
     });
 
     // Add event handlers.
@@ -64,12 +75,19 @@ const App = Object.create({
   
   "loadHistory": function() {
     const jaryn = Jaryn();
-    jaryn.vfs.readJSON("jaryn.json", (data) => {
-      const tbody = document.querySelector("#historyTable");
+    const tbody = document.querySelector("#historyTable");
+    
+    while(tbody.hasChildNodes()) {
+      tbody.removeChild(tbody.firstChild);
+    }
+    
+    jaryn.vfs.readJSON((data) => {
       const moods = document.querySelector("#averageMood");
       const emotions = document.querySelector("#averageEmotions");
       var averageMood = 0;
       var averageEmotions = {};
+      
+      console.dir(data);
       
       data.forEach((obj) => {
         const row = document.createElement('tr');

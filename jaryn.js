@@ -2,7 +2,7 @@ const Jaryn = function() { return(this === window) ? new Jaryn() : this; };
 
 
 Jaryn.prototype.error = Object.freeze({
-  "printError": ((error) => console.log(`Error: ${error}`))
+  "printError": ((error) => console.log(error))
 });
 
 Jaryn.prototype.permissions = Object.freeze({
@@ -33,12 +33,12 @@ Jaryn.prototype.vfs = Object.freeze({
    * @param year
    * @param cb
    */
-  "readJSON": (name, cb) => {
+  "readJSON": (cb) => {
     chrome.syncFileSystem.requestFileSystem((fs) => {
-      const perms = Jaryn.prototype.permissions.notcreate;
+      const perms = Jaryn.prototype.permissions.notCreate;
       const err = Jaryn.prototype.error.printError;
       
-      fs.root.getFile(name,
+      fs.root.getFile("jaryn.json",
         perms,
         (fileEntry) => {
           fileEntry.file((file) => {
@@ -60,66 +60,29 @@ Jaryn.prototype.vfs = Object.freeze({
    * @param data JSON to  stringify and write.
    * @param cb Callback to execute on write.
    */
-  "writeJSON": (file, json, cb) => {
+  "writeJSON": (json, cb) => {
     const ops =  Jaryn.prototype.permissions.create;
     const err = Jaryn.prototype.error.printError;
     
     chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile(file,
+      fs.root.getFile("jaryn.json",
       ops,
       (file) => {
         file.createWriter((writer) => {
           const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
           writer.write(blob);
-          if(cb !== undefined) cb();
+          if(cb !== undefined) cb(JSON.stringify(json));
         });
       },
       err);
     }); 
-  }
-});
-
-// Testing function
-Jaryn.prototype.testing = Object.freeze({
-  "writeDummyDataFile": () => {
-    const file = "dummy.json";
-    const data = Jaryn.prototype.testing.generateDummyData();   
-    Jaryn.prototype.vfs.writeJSON(file, data, () => {
-      console.log(`Wrote ${data} to ${file}.`);  
-    }); 
   },
   
-  // Fill this in later.
-  "readDummyDataFile": () => {
-    const file = "dummy.json";
-    Jaryn.prototype.vfs.readJSON(file, (data) => {
-      console.log(`Read ${file} and got:\n${data}.`);
+  "updateJSON": (day, cb) => {
+    Jaryn.prototype.vfs.readJSON((data) => {
+      data.push(day);  
+      console.log(data);
+      Jaryn.prototype.vfs.writeJSON(data, cb);
     });
-  },
-  
-  "generateDummyData": () => {
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() -1);
-  
-    return Object.freeze([{
-      "id": today.getTime(),
-      "date": today,
-      "mood": 5,
-      "feelings": [
-        "ok/fine"
-      ],
-      "notes": "Lorim ipsom"
-    },
-    {
-      "id": yesterday.getTime(),
-      "date": yesterday,
-      "mood": 5,
-      "feelings": [
-        "ok/fine",
-        "tired"
-      ],
-      "notes": "Lorim ipsom"
-    }]); 
-  }  
+  }
 });
