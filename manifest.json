@@ -12,12 +12,9 @@
   },
   
   "permissions": [
-    "unlimitedStorage",
     "syncFileSystem",
     {
-      "fileSystem": [
-        "write"
-      ]
+      "fileSystem": [ "write" ]
     }
   ],
 
