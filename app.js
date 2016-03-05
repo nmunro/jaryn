@@ -34,12 +34,12 @@ const App = Object.create({
       const data = {
         "id": now.getTime(),
         "date": now,
-        "mood": "",
+        "mood": 0,
         "feelings": [], 
         "notes": ""
       };
       
-      data.mood = mood;
+      data.mood = parseInt(mood, 10);
       data.notes = notes;
       data.emotions = emotions.map((node) => node.id); 
       
@@ -87,8 +87,6 @@ const App = Object.create({
       var averageMood = 0;
       var averageEmotions = {};
       
-      console.dir(data);
-      
       data.forEach((obj) => {
         const row = document.createElement('tr');
         const id = document.createElement('td');
@@ -104,14 +102,14 @@ const App = Object.create({
         id.innerHTML = obj.id;
         date.innerHTML = day + "/" + month + "/" + year;
         mood.innerHTML = obj.mood;
-        averageMood += obj.mood;
+        averageMood += parseInt(obj.mood, 10);
         obj.feelings.forEach((emotion) => {
           if(averageEmotions[emotion] !== undefined)
             averageEmotions[emotion] = averageEmotions[emotion] + 1;
           else
             averageEmotions[emotion] = 1;
         });
-        feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
+        //feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
         notes.innerHTML = obj.notes;
   
         row.appendChild(id);
@@ -123,7 +121,7 @@ const App = Object.create({
       });
       
       averageMood /= data.length;
-      moods.innerHTML = averageMood;
+      moods.innerHTML = Math.round(averageMood);
       Object.keys(averageEmotions).forEach((emotion) => {
         console.log(emotion + ": " + averageEmotions[emotion]);  
       });
