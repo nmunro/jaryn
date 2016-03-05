@@ -3,7 +3,7 @@ const Jaryn = Object.freeze(Object.create({
    * Convenience function to get the current data file.
    * @param function cb Call back to execute once data is loaded. 
    */
-  "getThisMonthsJSON": (cb) => {
+  "getThisMonthsJSON": function(cb) {
     const date = new Date();
     const month = date.getMonth()+1;
     const year = date.getFullYear();
@@ -20,7 +20,7 @@ const Jaryn = Object.freeze(Object.create({
    * @param Date date 
    * @param function cb Callback to execute when name generated.
    */
-  "getJSONForDate": (date, cb) => {
+  "getJSONForDate": function(date, cb) {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1 < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
     
@@ -36,7 +36,7 @@ const Jaryn = Object.freeze(Object.create({
    * @param String fn File name to open and read.
    * @param function cb Callback to execute when file is read.
    */
-  "readJSON": (fn, cb) => {
+  "readJSON": function(fn, cb) {
     chrome.syncFileSystem.requestFileSystem((fs) => {
       
       fs.root.getFile(fn,
@@ -60,7 +60,7 @@ const Jaryn = Object.freeze(Object.create({
    * @param String fn File name to create.
    * @param Function fn Callback to execute when file is created.
    */
-  "createJSON": (fn, cb) => {
+  "createJSON": function(fn, cb) {
     chrome.syncFileSystem.requestFileSystem((fs) => {
       fs.root.getFile(fn,
       { "create": true },
@@ -79,7 +79,7 @@ const Jaryn = Object.freeze(Object.create({
    * @param Object json JSON to  stringify and write.
    * @param cb Callback to execute on write.
    */
-  "writeJSON": (fn, json, cb) => {
+  "writeJSON": function(fn, json, cb) {
     chrome.syncFileSystem.requestFileSystem((fs) => {
       fs.root.getFile(fn,
       { "create": true },
@@ -99,7 +99,7 @@ const Jaryn = Object.freeze(Object.create({
    * @param Object day The data for the day.
    * @param function cb the Callback function to execute.
    */
-  "updateJSON": (fn, day, cb) => {
+  "updateJSON": function(fn, day, cb) {
     this.readJSON(fn, (data) => {
       data.push(day);  
       this.writeJSON(fn, data, cb);
