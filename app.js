@@ -72,62 +72,60 @@ const App = Object.freeze(Object.create({
     }); 
   },
   
-  "loadHistory": function() {
+  "displayAverageMood": function(data) {
+    const moods = document.querySelector("#averageMood");
+    const tmp = [];
+    data.forEach((d) => tmp.push(d.mood));
+    moods.innerHTML = Math.round(tmp.reduce((p, n) => p + n) / data.length);
+  },
+  
+  "displayAverageFeelings": function(data) {
+    const emotions = document.querySelector("#averageEmotions");
+    var averageEmotions = {};
+  },
+  
+  "displayHistory": function(data) {
     const tbody = document.querySelector("#historyTable");
     
-    while(tbody.hasChildNodes()) {
-      tbody.removeChild(tbody.firstChild);
-    }
+    while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
+    
+    data.forEach((obj) => {
+      const row = document.createElement('tr');
+      const id = document.createElement('td');
+      const date = document.createElement('td');
+      const mood = document.createElement('td');
+      const feelings = document.createElement('td');
+      const notes = document.createElement('td');
+      const dt = new Date(obj.date);
+      const year = dt.getFullYear();
+      const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
+      const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
+
+      id.innerHTML = obj.id;
+      date.innerHTML = day + "/" + month + "/" + year;
+      mood.innerHTML = obj.mood;
+      notes.innerHTML = obj.notes;
+
+      row.appendChild(id);
+      row.appendChild(date);
+      row.appendChild(mood);
+      row.appendChild(feelings);
+      row.appendChild(notes);
+      tbody.appendChild(row);
+    });
+  },
+  
+  "init": function() {
+    this.setDate();
+    this.connectEventHandlers();
+    this.setMoodValue("5");
     
     Jaryn.readJSON("jaryn.json", (data) => {
-      const moods = document.querySelector("#averageMood");
-      const emotions = document.querySelector("#averageEmotions");
-      var averageMood = 0;
-      var averageEmotions = {};
-      
-      data.forEach((obj) => {
-        const row = document.createElement('tr');
-        const id = document.createElement('td');
-        const date = document.createElement('td');
-        const mood = document.createElement('td');
-        const feelings = document.createElement('td');
-        const notes = document.createElement('td');
-        const dt = new Date(obj.date);
-        const year = dt.getFullYear();
-        const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
-        const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
-  
-        id.innerHTML = obj.id;
-        date.innerHTML = day + "/" + month + "/" + year;
-        mood.innerHTML = obj.mood;
-        averageMood += parseInt(obj.mood, 10);
-        obj.feelings.forEach((emotion) => {
-          if(averageEmotions[emotion] !== undefined)
-            averageEmotions[emotion] = averageEmotions[emotion] + 1;
-          else
-            averageEmotions[emotion] = 1;
-        });
-        //feelings.innerHTML = obj.feelings.reduce((prev, current) => prev + ", " + current);
-        notes.innerHTML = obj.notes;
-  
-        row.appendChild(id);
-        row.appendChild(date);
-        row.appendChild(mood);
-        row.appendChild(feelings);
-        row.appendChild(notes);
-        tbody.appendChild(row);
-      });
-      
-      averageMood /= data.length;
-      moods.innerHTML = Math.round(averageMood);
-      Object.keys(averageEmotions).forEach((emotion) => {
-        console.log(emotion + ": " + averageEmotions[emotion]);  
-      });
+      this.displayAverageMood(data);
+      this.displayAverageFeelings(data);
+      this.displayHistory(data);
     });
   } 
 }));
 
-App.setDate();
-App.setMoodValue("5");
-App.connectEventHandlers();
-App.loadHistory();
+App.init();
