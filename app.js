@@ -80,7 +80,8 @@ const App = Object.freeze(Object.create({
   
   "displayAverageFeelings": function(data) {
     const emotions = document.querySelector("#averageEmotions");
-    var averageEmotions = {};
+    const allEmotions = data.map((d) => d.feelings);
+    console.log(allEmotions);
   },
   
   "displayHistory": function(data) {
@@ -104,6 +105,7 @@ const App = Object.freeze(Object.create({
       date.innerHTML = day + "/" + month + "/" + year;
       mood.innerHTML = obj.mood;
       notes.innerHTML = obj.notes;
+      feelings.innerHTML = obj.feelings.reduce((p, n) => p + ", " + n);
 
       row.appendChild(id);
       row.appendChild(date);
