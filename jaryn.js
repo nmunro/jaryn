@@ -1,7 +1,4 @@
-const Jaryn = function() { return(this === window) ? new Jaryn() : this; };
-
-// Virtual file system layer to google drive.
-Jaryn.prototype.vfs = Object.freeze({
+const Jaryn = Object.freeze(Object.create({
   /**
    * Convenience function to get the current data file.
    * @param function cb Call back to execute once data is loaded. 
@@ -12,7 +9,7 @@ Jaryn.prototype.vfs = Object.freeze({
     const year = date.getFullYear();
     const name = month + "-" + year + ".json";
     
-    Jaryn.prototype.vfs.readJSON(name, cb);
+    this.readJSON(name, cb);
   },
   
   /**
@@ -27,7 +24,7 @@ Jaryn.prototype.vfs = Object.freeze({
     const year = date.getFullYear();
     const month = (date.getMonth() + 1 < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
     
-    Jaryn.prototype.vfs.readJSON(year + "-" + month + ".json", cb);
+    this.readJSON(year + "-" + month + ".json", cb);
   },
   
   /**
@@ -103,9 +100,9 @@ Jaryn.prototype.vfs = Object.freeze({
    * @param function cb the Callback function to execute.
    */
   "updateJSON": (fn, day, cb) => {
-    Jaryn.prototype.vfs.readJSON(fn, (data) => {
+    this.readJSON(fn, (data) => {
       data.push(day);  
-      Jaryn.prototype.vfs.writeJSON(fn, data, cb);
+      this.writeJSON(fn, data, cb);
     });
   }
-});
+}));

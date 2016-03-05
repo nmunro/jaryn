@@ -1,7 +1,7 @@
 // If it touches the DOM it belongs here, don't pass any DOM
 // manipulation into Jaryn.js, callbacks are ok though.
 
-const App = Object.create({
+const App = Object.freeze(Object.create({
   "showNav": function(nav) { nav.classList.add("active"); },
   "hideNav": function(nav) { nav.classList.remove("active"); },
   "showDiv": function(div) { div.classList.remove("invisible"); },
@@ -25,7 +25,6 @@ const App = Object.create({
   "connectEventHandlers": function() {
      // Save button event handler.
     document.getElementById("save").addEventListener("click", () => {
-      const jaryn = Jaryn();
       const now = new Date();
       const mood = document.getElementById("mood").value;
       const notes = document.getElementById("notes").value;
@@ -43,7 +42,7 @@ const App = Object.create({
       data.notes = notes;
       data.emotions = emotions.map((node) => node.id); 
       
-      jaryn.vfs.updateJSON("jaryn.json", data, (obj) => {
+      Jaryn.updateJSON("jaryn.json", data, (obj) => {
         console.log(`Wrote ${obj}.`);
         this.loadHistory();
       });
@@ -74,14 +73,13 @@ const App = Object.create({
   },
   
   "loadHistory": function() {
-    const jaryn = Jaryn();
     const tbody = document.querySelector("#historyTable");
     
     while(tbody.hasChildNodes()) {
       tbody.removeChild(tbody.firstChild);
     }
     
-    jaryn.vfs.readJSON("jaryn.json", (data) => {
+    Jaryn.readJSON("jaryn.json", (data) => {
       const moods = document.querySelector("#averageMood");
       const emotions = document.querySelector("#averageEmotions");
       var averageMood = 0;
@@ -127,7 +125,7 @@ const App = Object.create({
       });
     });
   } 
-});
+}));
 
 App.setDate();
 App.setMoodValue("5");
