@@ -74,9 +74,8 @@ const App = Object.freeze(Object.create({
   
   "displayAverageMood": function(data) {
     const moods = document.querySelector("#averageMood");
-    const tmp = [];
-    data.forEach((d) => tmp.push(d.mood));
-    moods.innerHTML = Math.round(tmp.reduce((p, n) => p + n) / data.length);
+    const avg = data.map((d) => d.mood).reduce((p, n) => p + n) / data.length;
+    moods.innerHTML = Math.round(avg);
   },
   
   "displayAverageFeelings": function(data) {
