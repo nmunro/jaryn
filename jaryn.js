@@ -26,19 +26,33 @@ Jaryn.prototype.vfs = Object.freeze({
   },
   
   /**
-   * getDataFile gets the data file for the given month/year and executes the 
-   * given callback.
+   * This function takes a date, parses the month and year from it
+   * and reads the JSON from that months <year>-<month>.json file.
+   * The supplied callback is then passed the data and executed.
    * 
-   * @param month 
-   * @param year
-   * @param cb
+   * @param Date date 
+   * @param function cb Callback to execute when name generated.
    */
-  "readJSON": (cb) => {
+  "getJSONForDate": (date, cb) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1 < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    
+    if(cb !== undefined) cb();  
+  },
+  
+  /**
+   * getDataFile gets the data file for the given filename and executes the 
+   * given callback with the data stored in the file passed in as an argument.
+   * 
+   * @param String fn File name to open and read.
+   * @param function cb Callback to execute when file is read.
+   */
+  "readJSON": (fn, cb) => {
     chrome.syncFileSystem.requestFileSystem((fs) => {
       const perms = Jaryn.prototype.permissions.notCreate;
       const err = Jaryn.prototype.error.printError;
       
-      fs.root.getFile("jaryn.json",
+      fs.root.getFile(fn,
         perms,
         (fileEntry) => {
           fileEntry.file((file) => {
@@ -56,16 +70,17 @@ Jaryn.prototype.vfs = Object.freeze({
   /**
    * This writes data to the specified file, creating it if it does not exist.
    * Ensure data is a JSON object!
-   * @param file File name to write to.
-   * @param data JSON to  stringify and write.
+   * 
+   * @param String fn File name to write to.
+   * @param Object json JSON to  stringify and write.
    * @param cb Callback to execute on write.
    */
-  "writeJSON": (json, cb) => {
+  "writeJSON": (fn, json, cb) => {
     const ops =  Jaryn.prototype.permissions.create;
     const err = Jaryn.prototype.error.printError;
     
     chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile("jaryn.json",
+      fs.root.getFile(fn,
       ops,
       (file) => {
         file.createWriter((writer) => {
@@ -78,11 +93,15 @@ Jaryn.prototype.vfs = Object.freeze({
     }); 
   },
   
-  "updateJSON": (day, cb) => {
-    Jaryn.prototype.vfs.readJSON((data) => {
+  /**
+   * @param String fn File name to write to.
+   * @param Object day The data for the day.
+   * @param function cb the Callback function to execute.
+   */
+  "updateJSON": (fn, day, cb) => {
+    Jaryn.prototype.vfs.readJSON(fn, (data) => {
       data.push(day);  
-      console.log(data);
-      Jaryn.prototype.vfs.writeJSON(data, cb);
+      Jaryn.prototype.vfs.writeJSON(fn, data, cb);
     });
   }
 });

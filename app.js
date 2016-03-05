@@ -43,7 +43,7 @@ const App = Object.create({
       data.notes = notes;
       data.emotions = emotions.map((node) => node.id); 
       
-      jaryn.vfs.updateJSON(data, (obj) => {
+      jaryn.vfs.updateJSON("jaryn.json", data, (obj) => {
         console.log(`Wrote ${obj}.`);
         this.loadHistory();
       });
@@ -81,7 +81,7 @@ const App = Object.create({
       tbody.removeChild(tbody.firstChild);
     }
     
-    jaryn.vfs.readJSON((data) => {
+    jaryn.vfs.readJSON("jaryn.json", (data) => {
       const moods = document.querySelector("#averageMood");
       const emotions = document.querySelector("#averageEmotions");
       var averageMood = 0;

@@ -4,15 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-
     <title>Dashboard Template for Bootstrap</title>
-
-    <!-- Bootstrap core CSS -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
     <link href="app.css" rel="stylesheet">
     <link href="dashboard.css" rel="stylesheet">
   </head>
@@ -39,6 +32,7 @@
             <li class="navLink active"><a id="dashboard" data-target="dashboardDiv" href="#">Dashboard<span class="sr-only">(current)</span></a></li>
             <li class="navLink"><a id="help" data-target="addDiv" href="#">Add Record</a></li>
             <li class="navLink"><a id="history" data-target="historyDiv" href="#">History</a></li>
+            <li class="navLink"><a id="about" data-target="aboutDiv" href="#">About</a></li>
           </ul>
         </div>
         
@@ -119,6 +113,16 @@
           <h1 class="page-header">Dashboard:&nbsp;<span id="date"></span></h1>
           <h3>Average mood:&nbsp;<span id="averageMood"></span></h3>
           <h3>Average emotion(s):&nbsp;<span id="averageEmotions"></span></h3>
+        </div>
+        
+        <div id="aboutDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
+          <h1 class="page-header">About</h1>
+          <div class="row">
+            <h3>Author: Neil Munro (neilmunro@gmail.com)</h3>  
+            <h3>
+              This program is licenced under the AGPL-3, the terms of which are distributed with this programs source code.  
+            </h3>
+          </div>
         </div>
         
         <div id="historyDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
