@@ -1,15 +1,5 @@
 const Jaryn = function() { return(this === window) ? new Jaryn() : this; };
 
-
-Jaryn.prototype.error = Object.freeze({
-  "printError": ((error) => console.log(error))
-});
-
-Jaryn.prototype.permissions = Object.freeze({
-  "create": { "create": true },
-  "notCreate": { "create": false }
-});
-
 // Virtual file system layer to google drive.
 Jaryn.prototype.vfs = Object.freeze({
   /**
@@ -27,7 +17,7 @@ Jaryn.prototype.vfs = Object.freeze({
   
   /**
    * This function takes a date, parses the month and year from it
-   * and reads the JSON from that months <year>-<month>.json file.
+   * and reads the JSON from that months <month>-<year>.json file.
    * The supplied callback is then passed the data and executed.
    * 
    * @param Date date 
@@ -37,23 +27,23 @@ Jaryn.prototype.vfs = Object.freeze({
     const year = date.getFullYear();
     const month = (date.getMonth() + 1 < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
     
-    if(cb !== undefined) cb();  
+    Jaryn.prototype.vfs.readJSON(year + "-" + month + ".json", cb);
   },
   
   /**
    * getDataFile gets the data file for the given filename and executes the 
    * given callback with the data stored in the file passed in as an argument.
    * 
+   * readJSON does NOT create a file if it doesn't already exist.
+   * 
    * @param String fn File name to open and read.
    * @param function cb Callback to execute when file is read.
    */
   "readJSON": (fn, cb) => {
     chrome.syncFileSystem.requestFileSystem((fs) => {
-      const perms = Jaryn.prototype.permissions.notCreate;
-      const err = Jaryn.prototype.error.printError;
       
       fs.root.getFile(fn,
-        perms,
+        { "create": false },
         (fileEntry) => {
           fileEntry.file((file) => {
             const fileReader = new FileReader();
@@ -63,7 +53,24 @@ Jaryn.prototype.vfs = Object.freeze({
             fileReader.readAsText(file);
           });  
         },
-        err);    
+        (err) => console.log(err));    
+    });
+  },
+  
+  /**
+   * createJSON creates a new json file with the given file name.
+   * 
+   * @param String fn File name to create.
+   * @param Function fn Callback to execute when file is created.
+   */
+  "createJSON": (fn, cb) => {
+    chrome.syncFileSystem.requestFileSystem((fs) => {
+      fs.root.getFile(fn,
+      { "create": true },
+      () => {
+        if(cb !== undefined) cb();  
+      }, 
+      (err) => console.log(err));
     });
   },
   
@@ -76,12 +83,9 @@ Jaryn.prototype.vfs = Object.freeze({
    * @param cb Callback to execute on write.
    */
   "writeJSON": (fn, json, cb) => {
-    const ops =  Jaryn.prototype.permissions.create;
-    const err = Jaryn.prototype.error.printError;
-    
     chrome.syncFileSystem.requestFileSystem((fs) => {
       fs.root.getFile(fn,
-      ops,
+      { "create": true },
       (file) => {
         file.createWriter((writer) => {
           const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
@@ -89,7 +93,7 @@ Jaryn.prototype.vfs = Object.freeze({
           if(cb !== undefined) cb(JSON.stringify(json));
         });
       },
-      err);
+      (err) => console.log(err));
     }); 
   },
   
