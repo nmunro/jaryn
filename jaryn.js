@@ -87,7 +87,7 @@ const Jaryn = Object.freeze(Object.create({
         file.createWriter((writer) => {
           const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
           writer.write(blob);
-          if(cb !== undefined) cb(JSON.stringify(json));
+          if(cb !== undefined) cb(json);
         });
       },
       (err) => console.log(err));

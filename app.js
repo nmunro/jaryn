@@ -3,14 +3,19 @@
 
 const App = Object.freeze(Object.create({
   "showNav": function(nav) { nav.classList.add("active"); },
+  
   "hideNav": function(nav) { nav.classList.remove("active"); },
+  
   "showDiv": function(div) { div.classList.remove("invisible"); },
+  
   "hideDiv": function(div) { div.classList.add("invisible"); },
+  
   "toggleDiv": function(div) {
     const nodes = Array.from(document.querySelectorAll(".contentDiv"));
     nodes.forEach(this.hideDiv);
     this.showDiv(div);
   },
+  
   "setDate": function() {
     const now = new Date();
     const date = document.querySelector("#date");
@@ -19,9 +24,11 @@ const App = Object.freeze(Object.create({
       
     date.innerHTML = day + "/" + month + "/" + now.getFullYear();
   },
+  
   "setMoodValue": function(value) {
     document.getElementById('moodValue').innerHTML = value;
   },
+  
   "connectEventHandlers": function() {
      // Save button event handler.
     document.getElementById("save").addEventListener("click", () => {
@@ -29,22 +36,22 @@ const App = Object.freeze(Object.create({
       const mood = document.getElementById("mood").value;
       const notes = document.getElementById("notes").value;
       const nodes = document.getElementsByClassName("emotion");
-      const emotions = Array.from(nodes).filter((node) => node.checked);
-      const data = {
+      const feelings = Array.from(nodes).filter((node) => node.checked);
+      var data = {
         "id": now.getTime(),
         "date": now,
         "mood": 0,
-        "feelings": [], 
         "notes": ""
       };
       
       data.mood = parseInt(mood, 10);
       data.notes = notes;
-      data.emotions = emotions.map((node) => node.id); 
+      data.feelings = feelings.map((node) => node.id); 
       
       Jaryn.updateJSON("jaryn.json", data, (obj) => {
-        console.log(`Wrote ${obj}.`);
-        this.loadHistory();
+        this.displayHistory(obj);
+        this.displayAverageMood(obj);
+        this.displayAverageFeelings(obj);
       });
     });
 
@@ -78,14 +85,38 @@ const App = Object.freeze(Object.create({
     moods.innerHTML = Math.round(avg);
   },
   
+  // Figure out what to do with this!
   "displayAverageFeelings": function(data) {
     const emotions = document.querySelector("#averageEmotions");
     const allEmotions = data.map((d) => d.feelings);
-    console.log(allEmotions);
+    const emotionCollection = [];
+    const emotionCount = {};
+    var highestCount = 0;
+    
+    allEmotions.forEach((emotion) => {
+      emotion.forEach((e) => {
+        if(emotionCount[e] !== undefined) emotionCount[e]++; 
+        else emotionCount[e] = 1;
+      });
+    });
+     
+    // Loop over keys and find the highest numbered one.
+    Object.keys(emotionCount).forEach((elm) => {
+      if(emotionCount[elm] > highestCount) highestCount = emotionCount[elm]; 
+    });
+    
+    // Get all the emotions with the same emotion count.
+    Object.keys(emotionCount).forEach((elm) => {
+      if(emotionCount[elm] === highestCount) emotionCollection.push(elm);
+    });
+    
+    emotions.innerHTML = emotionCollection.reduce((p, n) => p + ", " + n);
   },
   
   "displayHistory": function(data) {
     const tbody = document.querySelector("#historyTable");
+    
+    if(data === undefined) return;
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
