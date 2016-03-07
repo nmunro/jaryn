@@ -1,31 +1,15 @@
 const Jaryn = Object.freeze(Object.create({
   "initConfig": function(cb) {
-    const json = { "averageMood": 5, "moodCount": 0, "averageEmotion": "" };
-    
-    chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile("jaryn-config.json",
-      { "create": true },
-      (fileEntry) => {
-        fileEntry.createWriter((writer) => {
-          const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
-          writer.write(blob);
-          if(cb !== undefined) cb(json);
-        });
-      },
-      (err) => console.log(err));
-    });   
+    const config = { "averageMood": 5, "moodCount": 0, "averageEmotion": "" };
+    this.writeConfig(config, cb);    
   },
   
   "readConfig": function(cb) {
     this.readJSON("jaryn-config.json", cb);  
   },
   
-  "writeConfig": function(config, Cb) {
+  "writeConfig": function(config, cb) {
     this.writeJSON("jaryn-config.json", config, cb);    
-  },
-  
-  "updateConfig": function(config, cb) {
-    this.updateJSON("jaryn-config.json", config, cb);  
   },
   
   /**
