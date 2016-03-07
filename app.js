@@ -1,6 +1,3 @@
-// If it touches the DOM it belongs here, don't pass any DOM
-// manipulation into Jaryn.js, callbacks are ok though.
-
 const App = Object.freeze(Object.create({
   "showNav": function(nav) { nav.classList.add("active"); },
   
@@ -115,8 +112,6 @@ const App = Object.freeze(Object.create({
   
   "displayHistory": function(data) {
     const tbody = document.querySelector("#historyTable");
-    
-    if(data === undefined) return;
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     

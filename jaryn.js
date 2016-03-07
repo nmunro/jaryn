@@ -1,15 +1,39 @@
 const Jaryn = Object.freeze(Object.create({
+  "initConfig": function(cb) {
+    const json = { "averageMood": 5, "moodCount": 0, "averageEmotion": "" };
+    
+    chrome.syncFileSystem.requestFileSystem((fs) => {
+      fs.root.getFile("jaryn-config.json",
+      { "create": true },
+      (fileEntry) => {
+        fileEntry.createWriter((writer) => {
+          const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
+          writer.write(blob);
+          if(cb !== undefined) cb(json);
+        });
+      },
+      (err) => console.log(err));
+    });   
+  },
+  
+  "readConfig": function(cb) {
+    this.readJSON("jaryn-config.json", cb);  
+  },
+  
+  "writeConfig": function(config, Cb) {
+    this.writeJSON("jaryn-config.json", config, cb);    
+  },
+  
+  "updateConfig": function(config, cb) {
+    this.updateJSON("jaryn-config.json", config, cb);  
+  },
+  
   /**
    * Convenience function to get the current data file.
    * @param function cb Call back to execute once data is loaded. 
    */
   "getThisMonthsJSON": function(cb) {
-    const date = new Date();
-    const month = date.getMonth()+1;
-    const year = date.getFullYear();
-    const name = month + "-" + year + ".json";
-    
-    this.readJSON(name, cb);
+    this.getJSONForDate(new Date(), cb);
   },
   
   /**
