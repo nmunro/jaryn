@@ -4,10 +4,17 @@ const Jaryn = Object.freeze(Object.create({
     this.writeConfig(config, cb);    
   },
   
+  /**
+   * @param function cb Callback function to execute upon reading.
+   */ 
   "readConfig": function(cb) {
     this.readJSON("jaryn-config.json", cb);  
   },
   
+  /**
+   * @param Object config Configuration data to save.
+   * @param function cb Callback function to execute upon writing.
+   */
   "writeConfig": function(config, cb) {
     this.writeJSON("jaryn-config.json", config, cb);    
   },
@@ -63,23 +70,6 @@ const Jaryn = Object.freeze(Object.create({
   },
   
   /**
-   * createJSON creates a new json file with the given file name.
-   * 
-   * @param String fn File name to create.
-   * @param Function fn Callback to execute when file is created.
-   */
-  "createJSON": function(fn, cb) {
-    chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile(fn,
-      { "create": true },
-      () => {
-        if(cb !== undefined) cb();  
-      }, 
-      (err) => console.log(err));
-    });
-  },
-  
-  /**
    * This writes data to the specified file, creating it if it does not exist.
    * Ensure data is a JSON object!
    * 
@@ -92,6 +82,9 @@ const Jaryn = Object.freeze(Object.create({
       fs.root.getFile(fn,
       { "create": true },
       (file) => {
+        // Zero out the file contents.
+        file.createWriter((writer) => writer.truncate(0));
+        // Re-write with new data.
         file.createWriter((writer) => {
           const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
           writer.write(blob);
