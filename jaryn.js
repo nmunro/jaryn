@@ -1,4 +1,7 @@
 const Jaryn = Object.freeze(Object.create({
+  /**
+   * @param function cb Callback function to execute upon init.
+   */
   "initConfig": function(cb) {
     const config = { "averageMood": 5, "moodCount": 0, "averageEmotion": "" };
     this.writeConfig(config, cb);    
@@ -51,21 +54,20 @@ const Jaryn = Object.freeze(Object.create({
    * @param String fn File name to open and read.
    * @param function cb Callback to execute when file is read.
    */
-  "readJSON": function(fn, cb) {
+  "readJSON": function(fn, success, fail) {
     chrome.syncFileSystem.requestFileSystem((fs) => {
-      
       fs.root.getFile(fn,
         { "create": false },
         (fileEntry) => {
           fileEntry.file((file) => {
             const fileReader = new FileReader();
             fileReader.onload = (e) => {
-              if(cb !== undefined) cb(JSON.parse(fileReader.result));
+              success(JSON.parse(fileReader.result));
             };
             fileReader.readAsText(file);
           });  
         },
-        (err) => console.log(err));    
+        (err) => fail(err));    
     });
   },
   

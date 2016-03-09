@@ -16,7 +16,7 @@ const App = Object.freeze(Object.create({
   "setDate": function() {
     const now = new Date();
     const date = document.querySelector("#date");
-    const month = ((now.getMonth() +1)< 10) ? "" + 0 + (now.getMonth()+1) : now.getMonth()+1;
+    const month = ((now.getMonth() +1) < 10) ? "" + 0 + (now.getMonth()+1) : now.getMonth()+1;
     const day = (now.getDate() < 10) ? "" + 0 + now.getDate() : now.getDate();
       
     date.innerHTML = day + "/" + month + "/" + now.getFullYear();
@@ -147,10 +147,20 @@ const App = Object.freeze(Object.create({
     this.connectEventHandlers();
     this.setMoodValue("5");
     
-    Jaryn.readJSON("jaryn.json", (data) => {
-      this.displayAverageMood(data);
-      this.displayAverageFeelings(data);
-      this.displayHistory(data);
+    new Promise((resolve, reject) => {
+      Jaryn.readJSON("jaryn.json", (data) => {
+        this.displayAverageMood(data);
+        this.displayAverageFeelings(data);
+        this.displayHistory(data);
+        resolve(data);
+      },
+      (err) => reject(err));
+    })
+    .then((msg) => {
+      console.log("Success: " + msg);
+    },
+    (err) => {
+      console.log("Failure: " + err);
     });
   } 
 }));
