@@ -2,24 +2,22 @@ const Jaryn = Object.freeze(Object.create({
   /**
    * @param function cb Callback function to execute upon init.
    */
-  "initConfig": function(cb) {
-    const config = { "averageMood": 5, "moodCount": 0, "averageEmotion": "" };
-    this.writeConfig(config, cb);    
+  "loadConfig": function(cb) {
+    const config = { "averageMood": 5, "moodCount": 0, "averageEmotion": [] };
+    
+    this.readJSON("jaryn-config.json", (data) => cb(data),
+      (err) => {
+        this.writeJSON("jaryn-config.json", config,
+          (data) => cb(data),
+          (err) => console.log(err)
+        );  
+      }
+    );
   },
   
-  /**
-   * @param function cb Callback function to execute upon reading.
-   */ 
-  "readConfig": function(cb) {
-    this.readJSON("jaryn-config.json", cb);  
-  },
-  
-  /**
-   * @param Object config Configuration data to save.
-   * @param function cb Callback function to execute upon writing.
-   */
-  "writeConfig": function(config, cb) {
-    this.writeJSON("jaryn-config.json", config, cb);    
+  "loadHistory": function(success, fail) {
+    const fn = "jaryn.json";  
+    this.readJSON(fn, success, fail);
   },
   
   /**
@@ -55,6 +53,7 @@ const Jaryn = Object.freeze(Object.create({
    * @param function cb Callback to execute when file is read.
    */
   "readJSON": function(fn, success, fail) {
+    console.log(`Reading: ${fn}.`);
     chrome.syncFileSystem.requestFileSystem((fs) => {
       fs.root.getFile(fn,
         { "create": false },
@@ -66,8 +65,7 @@ const Jaryn = Object.freeze(Object.create({
             };
             fileReader.readAsText(file);
           });  
-        },
-        (err) => fail(err));    
+        }, fail);    
     });
   },
   
@@ -79,7 +77,8 @@ const Jaryn = Object.freeze(Object.create({
    * @param Object json JSON to  stringify and write.
    * @param cb Callback to execute on write.
    */
-  "writeJSON": function(fn, json, cb) {
+  "writeJSON": function(fn, json, success, fail) {
+    console.log(`Writing: ${fn}.`);
     chrome.syncFileSystem.requestFileSystem((fs) => {
       fs.root.getFile(fn,
       { "create": true },
@@ -90,10 +89,9 @@ const Jaryn = Object.freeze(Object.create({
         file.createWriter((writer) => {
           const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
           writer.write(blob);
-          if(cb !== undefined) cb(json);
+          success(json);
         });
-      },
-      (err) => console.log(err));
+      }, fail);
     }); 
   },
   
@@ -102,7 +100,7 @@ const Jaryn = Object.freeze(Object.create({
    * @param Object day The data for the day.
    * @param function cb the Callback function to execute.
    */
-  "updateJSON": function(fn, day, cb) {
+  "updateDiary": function(fn, day, cb) {
     this.readJSON(fn, (data) => {
       data.push(day);  
       this.writeJSON(fn, data, cb);

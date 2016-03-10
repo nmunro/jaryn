@@ -26,7 +26,7 @@ const App = Object.freeze(Object.create({
     document.getElementById('moodValue').innerHTML = value;
   },
   
-  "connectEventHandlers": function() {
+  "setupEventHandlers": function() {
      // Save button event handler.
     document.getElementById("save").addEventListener("click", () => {
       const now = new Date();
@@ -45,7 +45,7 @@ const App = Object.freeze(Object.create({
       data.notes = notes;
       data.feelings = feelings.map((node) => node.id); 
       
-      Jaryn.updateJSON("jaryn.json", data, (obj) => {
+      Jaryn.updateDiary("jaryn.json", data, (obj) => {
         this.displayHistory(obj);
         this.displayAverageMood(obj);
         this.displayAverageFeelings(obj);
@@ -76,41 +76,17 @@ const App = Object.freeze(Object.create({
     }); 
   },
   
-  "displayAverageMood": function(data) {
-    const moods = document.querySelector("#averageMood");
-    const avg = data.map((d) => d.mood).reduce((p, n) => p + n) / data.length;
-    moods.innerHTML = Math.round(avg);
+  "showAverageMood": function(data) {
+    const moods = document.querySelector("#averageMood").innerHTML = data;
   },
   
   // Figure out what to do with this!
-  "displayAverageFeelings": function(data) {
+  "showAverageFeelings": function(allEmotions) {
     const emotions = document.querySelector("#averageEmotions");
-    const allEmotions = data.map((d) => d.feelings);
-    const emotionCollection = [];
-    const emotionCount = {};
-    var highestCount = 0;
-    
-    allEmotions.forEach((emotion) => {
-      emotion.forEach((e) => {
-        if(emotionCount[e] !== undefined) emotionCount[e]++; 
-        else emotionCount[e] = 1;
-      });
-    });
-     
-    // Loop over keys and find the highest numbered one.
-    Object.keys(emotionCount).forEach((elm) => {
-      if(emotionCount[elm] > highestCount) highestCount = emotionCount[elm]; 
-    });
-    
-    // Get all the emotions with the same emotion count.
-    Object.keys(emotionCount).forEach((elm) => {
-      if(emotionCount[elm] === highestCount) emotionCollection.push(elm);
-    });
-    
-    emotions.innerHTML = emotionCollection.reduce((p, n) => p + ", " + n);
+    emotions.innerHTML = allEmotions.join(", ");
   },
   
-  "displayHistory": function(data) {
+  "showHistory": function(data) {
     const tbody = document.querySelector("#historyTable");
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
@@ -144,23 +120,15 @@ const App = Object.freeze(Object.create({
   
   "init": function() {
     this.setDate();
-    this.connectEventHandlers();
+    this.setupEventHandlers();
     this.setMoodValue("5");
     
-    new Promise((resolve, reject) => {
-      Jaryn.readJSON("jaryn.json", (data) => {
-        this.displayAverageMood(data);
-        this.displayAverageFeelings(data);
-        this.displayHistory(data);
-        resolve(data);
-      },
-      (err) => reject(err));
-    })
-    .then((msg) => {
-      console.log("Success: " + msg);
-    },
-    (err) => {
-      console.log("Failure: " + err);
+    Jaryn.loadConfig((conf) => {
+      this.showAverageMood(conf.averageMood);
+      this.showAverageFeelings(conf.averageEmotion);
+      
+      // Only read data files if config is loaded.
+      Jaryn.loadHistory((d) => this.showHistory(d), (e) => console.log(e));
     });
   } 
 }));
