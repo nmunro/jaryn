@@ -46,9 +46,11 @@ const App = Object.freeze(Object.create({
       data.feelings = feelings.map((node) => node.id); 
       
       Jaryn.updateDiary("jaryn.json", data, (obj) => {
-        this.displayHistory(obj);
-        this.displayAverageMood(obj);
-        this.displayAverageFeelings(obj);
+        this.showHistory(obj);
+        
+        // Fix these
+        //this.displayAverageMood(obj);
+        //this.displayAverageFeelings(obj);
       });
     });
 
