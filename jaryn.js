@@ -103,13 +103,14 @@ const Jaryn = Object.freeze(Object.create({
    */
   "updateDiary": function(day, cb) {
     const fn = this.getThisMonthsJSON();
-    this.readJSON(fn, (data) => {
-      data.push(day);  
-      this.writeJSON(fn, data, cb);
-    }, () => {
-      const data = [];
+    const writeData = (data) => {
       data.push(day);
       this.writeJSON(fn, data, cb);
-    });
+    };
+    
+    this.readJSON(fn,
+      (data) => writeData(data),
+      () => writeData([])
+    );
   }
 }));
