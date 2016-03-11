@@ -2,28 +2,42 @@ const Jaryn = Object.freeze(Object.create({
   "configFile": "jaryn-config.json",
   
   /**
+   * loadConfig loads a config object from the config file and passes the 
+   * config into the callback.
+   * 
    * @param function cb Callback function to execute upon init.
    */
   "loadConfig": function(cb) {
-    const config = { "averageMood": 5, "moodCount": 0, "averageEmotion": [] };
+    const config = {"averageMood": 5, "moodCount": 0, "averageEmotion": []};
     
-    this.readJSON(this.configFile, (data) => cb(data),
-      (err) => this.saveConfig(config, cb));
+    this.readJSON({
+      "fileName": this.configFile,
+      "onSuccess": cb,
+      "onFailure": (err) => this.saveConfig(config, cb)
+    });
   },
   
   /**
+   * saveConfig saves a config object to the config file.
+   * 
    * @param object config Config object to save.
    * @param function cb Callback to execute when saved.
   */
   "saveConfig": function(config, cb) {
-    this.writeJSON(this.configFile, config,
-      (data) => cb(data),
-      (err) => console.log(err)
-    );  
+    this.writeJSON({
+      "fileName": this.configFile,
+      "data": config,
+      "onSuccess": cb,
+      "onFailure": (err) => console.log(err)
+    });
   },
   
   "loadHistory": function(cb) {
-    this.readJSON("jaryn.json", cb, (err) => cb([]));
+    this.readJSON({
+      "fileName": "jaryn.json",
+      "onSuccess": cb,
+      "onFailure": (err) => cb([])
+    });
   },
   
   /**
@@ -58,20 +72,20 @@ const Jaryn = Object.freeze(Object.create({
    * @param String fn File name to open and read.
    * @param function cb Callback to execute when file is read.
    */
-  "readJSON": function(fn, success, fail) {
-    console.log(`Reading: ${fn}.`);
+  "readJSON": function(obj) {
+    console.log(`Reading: ${obj.fileName}.`);
     chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile(fn,
+      fs.root.getFile(obj.fileName,
         { "create": false },
         (fileEntry) => {
           fileEntry.file((file) => {
             const fileReader = new FileReader();
             fileReader.onload = (e) => {
-              success(JSON.parse(fileReader.result));
+              obj.onSuccess(JSON.parse(fileReader.result));
             };
             fileReader.readAsText(file);
           });  
-        }, fail);    
+        }, obj.onFailure);    
     });
   },
   
@@ -83,21 +97,21 @@ const Jaryn = Object.freeze(Object.create({
    * @param Object json JSON to  stringify and write.
    * @param cb Callback to execute on write.
    */
-  "writeJSON": function(fn, json, success, fail) {
-    console.log(`Writing: ${fn}.`);
+  "writeJSON": function(obj) {
+    console.log(`Writing: ${obj.fileName}.`);
     chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile(fn,
+      fs.root.getFile(obj.fileName,
       { "create": true },
       (file) => {
         // Zero out the file contents.
         file.createWriter((writer) => writer.truncate(0));
         // Re-write with new data.
         file.createWriter((writer) => {
-          const blob = new Blob([JSON.stringify(json)], { "type": "text/plain" });
+          const blob = new Blob([JSON.stringify(obj.data)], { "type": "text/plain" });
           writer.write(blob);
-          success(json);
+          obj.onSuccess(obj.data);
         });
-      }, fail);
+      }, obj.onFailure);
     }); 
   },
   
@@ -113,12 +127,18 @@ const Jaryn = Object.freeze(Object.create({
     const fn = this.getThisMonthsJSON();
     const writeData = (data) => {
       data.push(day);
-      this.writeJSON(fn, data, cb);
+      this.writeJSON({
+        "fileName": fn,
+        "data": data,
+        "onSuccess": cb,
+        "onFailure": (err) => console.log(err)
+      });
     };
     
-    this.readJSON(fn,
-      (data) => writeData(data),
-      () => writeData([])
-    );
+    this.readJSON({
+      "fileName": fn,
+      "onSuccess": (data) => writeData(data),
+      "onFailure": () => writeData([])
+    });
   }
 }));
