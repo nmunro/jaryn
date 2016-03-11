@@ -32,6 +32,12 @@ const Jaryn = Object.freeze(Object.create({
     });
   },
   
+  /**
+   * loadHistory reads the current months history file and passes the data
+   * into the provided callback function.
+   * 
+   * @param function cb Callback to execute once history has been loaded.
+   */
   "loadHistory": function(cb) {
     this.readJSON({
       "fileName": this.getThisMonthsJSON(),
@@ -41,8 +47,7 @@ const Jaryn = Object.freeze(Object.create({
   },
   
   /**
-   * Convenience function to get the current data file.
-   * @param function cb Call back to execute once data is loaded. 
+   * getThisMonthsJSON is a convenience function to get the current data file.
    */
   "getThisMonthsJSON": function() {
     return this.getJSONForDate(new Date());
@@ -53,7 +58,7 @@ const Jaryn = Object.freeze(Object.create({
    * and reads the JSON from that months <month>-<year>.json file.
    * The supplied callback is then passed the data and executed.
    * 
-   * @param Date date 
+   * @param Date date The date to get the history file for.
    * @param function cb Callback to execute when name generated.
    */
   "getJSONForDate": function(date, cb) {
@@ -69,8 +74,8 @@ const Jaryn = Object.freeze(Object.create({
    * 
    * readJSON does NOT create a file if it doesn't already exist.
    * 
-   * @param String fn File name to open and read.
-   * @param function cb Callback to execute when file is read.
+   * @param object obj An object containing the file name and success/failure
+   * callback functions.
    */
   "readJSON": function(obj) {
     console.log(`Reading: ${obj.fileName}.`);
@@ -93,9 +98,8 @@ const Jaryn = Object.freeze(Object.create({
    * This writes data to the specified file, creating it if it does not exist.
    * Ensure data is a JSON object!
    * 
-   * @param String fn File name to write to.
-   * @param Object json JSON to  stringify and write.
-   * @param cb Callback to execute on write.
+   * @param object obj An object containing the file name, data and success or
+   * failure callback functions.
    */
   "writeJSON": function(obj) {
     console.log(`Writing: ${obj.fileName}.`);
@@ -119,7 +123,6 @@ const Jaryn = Object.freeze(Object.create({
    * updateDiary takes a single entry and saves it to the current months 
    * history file.
    * 
-   * @param String fn File name to write to.
    * @param Object day The data for the day.
    * @param function cb the Callback function to execute.
    */
