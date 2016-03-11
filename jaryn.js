@@ -8,13 +8,18 @@ const Jaryn = Object.freeze(Object.create({
     const config = { "averageMood": 5, "moodCount": 0, "averageEmotion": [] };
     
     this.readJSON(this.configFile, (data) => cb(data),
-      (err) => {
-        this.writeJSON(this.configFile, config,
-          (data) => cb(data),
-          (err) => console.log(err)
-        );  
-      }
-    );
+      (err) => this.saveConfig(config, cb));
+  },
+  
+  /**
+   * @param object config Config object to save.
+   * @param function cb Callback to execute when saved.
+  */
+  "saveConfig": function(config, cb) {
+    this.writeJSON(this.configFile, config,
+      (data) => cb(data),
+      (err) => console.log(err)
+    );  
   },
   
   "loadHistory": function(cb) {
