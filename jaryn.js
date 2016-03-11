@@ -1,13 +1,15 @@
 const Jaryn = Object.freeze(Object.create({
+  "configFile": "jaryn-config.json",
+  
   /**
    * @param function cb Callback function to execute upon init.
    */
   "loadConfig": function(cb) {
     const config = { "averageMood": 5, "moodCount": 0, "averageEmotion": [] };
     
-    this.readJSON("jaryn-config.json", (data) => cb(data),
+    this.readJSON(this.configFile, (data) => cb(data),
       (err) => {
-        this.writeJSON("jaryn-config.json", config,
+        this.writeJSON(this.configFile, config,
           (data) => cb(data),
           (err) => console.log(err)
         );  
@@ -16,16 +18,15 @@ const Jaryn = Object.freeze(Object.create({
   },
   
   "loadHistory": function(success, fail) {
-    const fn = "jaryn.json";  
-    this.readJSON(fn, success, fail);
+    this.readJSON("jaryn.json", success, fail);
   },
   
   /**
    * Convenience function to get the current data file.
    * @param function cb Call back to execute once data is loaded. 
    */
-  "getThisMonthsJSON": function(cb) {
-    this.getJSONForDate(new Date(), cb);
+  "getThisMonthsJSON": function() {
+    return this.getJSONForDate(new Date());
   },
   
   /**
@@ -40,7 +41,7 @@ const Jaryn = Object.freeze(Object.create({
     const year = date.getFullYear();
     const month = (date.getMonth() + 1 < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
     
-    this.readJSON(year + "-" + month + ".json", cb);
+    return year + "-" + month + ".json";
   },
   
   /**
@@ -100,9 +101,14 @@ const Jaryn = Object.freeze(Object.create({
    * @param Object day The data for the day.
    * @param function cb the Callback function to execute.
    */
-  "updateDiary": function(fn, day, cb) {
+  "updateDiary": function(day, cb) {
+    const fn = this.getThisMonthsJSON();
     this.readJSON(fn, (data) => {
       data.push(day);  
+      this.writeJSON(fn, data, cb);
+    }, () => {
+      const data = [];
+      data.push(day);
       this.writeJSON(fn, data, cb);
     });
   }

@@ -45,7 +45,7 @@ const App = Object.freeze(Object.create({
       data.notes = notes;
       data.feelings = feelings.map((node) => node.id); 
       
-      Jaryn.updateDiary("jaryn.json", data, (obj) => {
+      Jaryn.updateDiary(data, (obj) => {
         this.showHistory(obj);
         
         // Fix these
