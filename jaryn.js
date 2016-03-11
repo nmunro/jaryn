@@ -34,7 +34,7 @@ const Jaryn = Object.freeze(Object.create({
   
   "loadHistory": function(cb) {
     this.readJSON({
-      "fileName": "jaryn.json",
+      "fileName": this.getThisMonthsJSON(),
       "onSuccess": cb,
       "onFailure": (err) => cb([])
     });
