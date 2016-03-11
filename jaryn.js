@@ -17,8 +17,8 @@ const Jaryn = Object.freeze(Object.create({
     );
   },
   
-  "loadHistory": function(success, fail) {
-    this.readJSON("jaryn.json", success, fail);
+  "loadHistory": function(cb) {
+    this.readJSON("jaryn.json", cb, (err) => cb([]));
   },
   
   /**
@@ -97,6 +97,9 @@ const Jaryn = Object.freeze(Object.create({
   },
   
   /**
+   * updateDiary takes a single entry and saves it to the current months 
+   * history file.
+   * 
    * @param String fn File name to write to.
    * @param Object day The data for the day.
    * @param function cb the Callback function to execute.
