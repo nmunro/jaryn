@@ -47,6 +47,16 @@ const Jaryn = Object.freeze(Object.create({
   },
   
   /**
+   * This function gets the last five days of historical information.
+   * 
+   * @param Date date The date to start the history count from.
+   * @param function cb The callback function to execute.
+   */
+  "getFiveDayHistory": function(date, cb) {
+    
+  },
+  
+  /**
    * getThisMonthsJSON is a convenience function to get the current data file.
    */
   "getThisMonthsJSON": function() {
