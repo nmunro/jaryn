@@ -53,7 +53,9 @@ const Jaryn = Object.freeze(Object.create({
    * @param function cb The callback function to execute.
    */
   "getFiveDayHistory": function(date, cb) {
-    
+    this.loadHistory((data) => {
+      console.log(data.length);
+    });  
   },
   
   /**

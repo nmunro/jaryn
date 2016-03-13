@@ -29,18 +29,23 @@ const App = Object.freeze(Object.create({
   "setupEventHandlers": function() {
      // Save button event handler.
     document.getElementById("save").addEventListener("click", () => {
+      const data = {};
       const now = new Date();
       const mood = document.getElementById("mood").value;
       const notes = document.getElementById("notes").value;
       const nodes = document.getElementsByClassName("emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
-      var data = {
-        "id": now.getTime(),
-        "date": now,
-        "mood": 0,
-        "notes": ""
-      };
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const date = now.getDate();
       
+      now.setTime(0);
+      now.setYear(year);
+      now.setMonth(month);
+      now.setDate(date);
+      
+      data.id = now.getTime();
+      data.date = now;
       data.mood = parseInt(mood, 10);
       data.notes = notes;
       data.feelings = feelings.map((node) => node.id); 
