@@ -98,23 +98,23 @@ const App = Object.freeze(Object.create({
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
-    data.forEach((obj) => {
+    Object.keys(data).forEach((obj) => {
       const row = document.createElement('tr');
       const id = document.createElement('td');
       const date = document.createElement('td');
       const mood = document.createElement('td');
       const feelings = document.createElement('td');
       const notes = document.createElement('td');
-      const dt = new Date(obj.date);
+      const dt = new Date(data[obj].date);
       const year = dt.getFullYear();
       const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
       const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
 
-      id.innerHTML = obj.id;
+      id.innerHTML = data[obj].id;
       date.innerHTML = day + "/" + month + "/" + year;
-      mood.innerHTML = obj.mood;
-      notes.innerHTML = obj.notes;
-      feelings.innerHTML = obj.feelings.reduce((p, n) => p + ", " + n);
+      mood.innerHTML = data[obj].mood;
+      notes.innerHTML = data[obj].notes;
+      feelings.innerHTML = data[obj].feelings.reduce((p, n) => p + ", " + n);
 
       row.appendChild(id);
       row.appendChild(date);

@@ -141,7 +141,8 @@ const Jaryn = Object.freeze(Object.create({
   "updateDiary": function(day, cb) {
     const fn = this.getThisMonthsJSON();
     const writeData = (data) => {
-      data.push(day);
+      data[day.id] = day;
+      
       this.writeJSON({
         "fileName": fn,
         "data": data,
