@@ -100,7 +100,6 @@ const App = Object.freeze(Object.create({
     
     Object.keys(data).forEach((obj) => {
       const row = document.createElement('tr');
-      const id = document.createElement('td');
       const date = document.createElement('td');
       const mood = document.createElement('td');
       const feelings = document.createElement('td');
@@ -110,13 +109,11 @@ const App = Object.freeze(Object.create({
       const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
       const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
 
-      id.innerHTML = data[obj].id;
       date.innerHTML = day + "/" + month + "/" + year;
       mood.innerHTML = data[obj].mood;
       notes.innerHTML = data[obj].notes;
       feelings.innerHTML = data[obj].feelings.reduce((p, n) => p + ", " + n);
 
-      row.appendChild(id);
       row.appendChild(date);
       row.appendChild(mood);
       row.appendChild(feelings);
