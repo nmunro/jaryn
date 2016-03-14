@@ -98,7 +98,8 @@ const App = Object.freeze(Object.create({
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
-    Object.keys(data).forEach((obj) => {
+    
+    Object.keys(data).reverse().forEach((obj) => {
       const row = document.createElement('tr');
       const date = document.createElement('td');
       const mood = document.createElement('td');
