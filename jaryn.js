@@ -1,5 +1,7 @@
 const Jaryn = Object.freeze(Object.create({
-  "configFile": "jaryn-config.json",
+  "getConfigFile": function() {
+    return "jaryn-config.json";
+  },
   
   /**
    * loadConfig loads a config object from the config file and passes the 
@@ -11,7 +13,7 @@ const Jaryn = Object.freeze(Object.create({
     const config = {"averageMood": 5, "moodCount": 0, "averageEmotion": []};
     
     this.readJSON({
-      "fileName": this.configFile,
+      "fileName": this.getConfigFile(),
       "onSuccess": cb,
       "onFailure": (err) => this.saveConfig(config, cb)
     });
@@ -25,7 +27,7 @@ const Jaryn = Object.freeze(Object.create({
   */
   "saveConfig": function(config, cb) {
     this.writeJSON({
-      "fileName": this.configFile,
+      "fileName": this.getConfigFile(),
       "data": config,
       "onSuccess": cb,
       "onFailure": (err) => console.log(err)
@@ -52,10 +54,38 @@ const Jaryn = Object.freeze(Object.create({
    * @param Date date The date to start the history count from.
    * @param function cb The callback function to execute.
    */
-  "getFiveDayHistory": function(date, cb) {
-    this.loadHistory((data) => {
-      console.log(data.length);
-    });  
+  "getFiveDayHistory": function(cb) {
+    // Get all the keys we want to get.
+    const months = new Set();
+    const dates = Array.of(0, 1, 2, 3, 4).map((num) => {
+      const dayOffset = ((1000*60)*60)*24;
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const date = now.getDate();
+      
+      now.setTime(0);
+      now.setYear(year);
+      now.setMonth(month);
+      now.setDate(date);
+      
+      now.setTime(now-(dayOffset*num));
+      return now.getTime();
+    });
+    
+    // Builds a set of month files needed to get the last five days.
+    dates.forEach(key => {
+      const dt = new Date();
+      // I hate that I have to put this here, looks so bad... :(
+      dt.setTime(key);
+      const year = dt.getFullYear();
+      const month = (dt.getMonth() + 1 < 10) ?
+        "0" + (dt.getMonth() + 1) :
+        dt.getMonth() + 1;
+      months.add(year + '-' + month + '.json');
+    });
+    
+    console.log(months);
   },
   
   /**
