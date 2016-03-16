@@ -56,6 +56,7 @@ const Jaryn = Object.freeze(Object.create({
    */
   "getSevenDayHistory": function(cb) {
     // Get all the keys we want to get.
+    const obj = {};
     const months = new Set();
     const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map(num => {
       const dayOffset = ((1000*60)*60)*24;
@@ -84,21 +85,13 @@ const Jaryn = Object.freeze(Object.create({
       months.add(year + '-' + month + '.json');
     });
     
-    // Get all dates from the only file.
-    if (months.size === 1) {
-      // Well, this DOES get the file name...
-      const fn = [...months][0];
-      const obj = {};
-      
+    // Unpack set into array, cos I cheat like that.
+    [...months].forEach((fn, count, arr) => {
       this.loadHistory(fn, data => {
         dates.forEach(date => obj[date] = data[date]);
-        cb(obj);
-      });      
-    } 
-    else {
-      const [fn1, fn2] = [...months];
-      console.log("Not implemented yet.");
-    }
+        if(count === arr.length-1) cb(obj);
+      });
+    });
   },
   
   /**
