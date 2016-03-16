@@ -57,7 +57,6 @@ const Jaryn = Object.freeze(Object.create({
   "getSevenDayHistory": function(cb) {
     // Get all the keys we want to get.
     const obj = {};
-    const months = new Set();
     const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map(num => {
       const dayOffset = ((1000*60)*60)*24;
       const now = new Date();
@@ -72,23 +71,16 @@ const Jaryn = Object.freeze(Object.create({
       
       now.setTime(now-(dayOffset*num));
       return now.getTime();
-    });
-    
-    // Builds a set of month files needed to get the last five days.
-    dates.forEach(key => {
+    }).forEach((date, count, arr) => {
       const dt = new Date();
-      // I hate that I have to put this here, looks so bad... :(
-      dt.setTime(key);
+      dt.setTime(date);
       const year = dt.getFullYear();
       const m = dt.getMonth()+1;
       const month = (m < 10) ? "0" + m : m;
-      months.add(year + '-' + month + '.json');
-    });
-    
-    // Unpack set into array, cos I cheat like that.
-    [...months].forEach((fn, count, arr) => {
+      const fn = year + '-' + month + '.json';
+      
       this.loadHistory(fn, data => {
-        dates.forEach(date => obj[date] = data[date]);
+        obj[date] = data[date];
         if(count === arr.length-1) cb(obj);
       });
     });
