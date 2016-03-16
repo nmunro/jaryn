@@ -133,7 +133,7 @@ const App = Object.freeze(Object.create({
       this.showAverageFeelings(conf.averageEmotion);
       
       // Only read data files if config is loaded.
-      Jaryn.loadHistory((d) => this.showHistory(d));
+      Jaryn.loadHistory(Jaryn.getThisMonthsJSON(), d => this.showHistory(d));
     });
   } 
 }));

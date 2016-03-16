@@ -40,9 +40,9 @@ const Jaryn = Object.freeze(Object.create({
    * 
    * @param function cb Callback to execute once history has been loaded.
    */
-  "loadHistory": function(cb) {
+  "loadHistory": function(fn, cb) {
     this.readJSON({
-      "fileName": this.getThisMonthsJSON(),
+      "fileName": fn,
       "onSuccess": cb,
       "onFailure": (err) => cb([])
     });
@@ -54,10 +54,10 @@ const Jaryn = Object.freeze(Object.create({
    * @param Date date The date to start the history count from.
    * @param function cb The callback function to execute.
    */
-  "getFiveDayHistory": function(cb) {
+  "getSevenDayHistory": function(cb) {
     // Get all the keys we want to get.
     const months = new Set();
-    const dates = Array.of(0, 1, 2, 3, 4).map((num) => {
+    const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map(num => {
       const dayOffset = ((1000*60)*60)*24;
       const now = new Date();
       const year = now.getFullYear();
@@ -79,13 +79,26 @@ const Jaryn = Object.freeze(Object.create({
       // I hate that I have to put this here, looks so bad... :(
       dt.setTime(key);
       const year = dt.getFullYear();
-      const month = (dt.getMonth() + 1 < 10) ?
-        "0" + (dt.getMonth() + 1) :
-        dt.getMonth() + 1;
+      const m = dt.getMonth()+1;
+      const month = (m < 10) ? "0" + m : m;
       months.add(year + '-' + month + '.json');
     });
     
-    console.log(months);
+    // Get all dates from the only file.
+    if (months.size === 1) {
+      // Well, this DOES get the file name...
+      const fn = [...months][0];
+      const obj = {};
+      
+      this.loadHistory(fn, data => {
+        dates.forEach(date => obj[date] = data[date]);
+        cb(obj);
+      });      
+    } 
+    else {
+      const [fn1, fn2] = [...months];
+      console.log("Not implemented yet.");
+    }
   },
   
   /**
