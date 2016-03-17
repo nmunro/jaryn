@@ -127,6 +127,7 @@ const App = Object.freeze(Object.create({
       tbody.appendChild(row);
     });
     
+    // Hah, epic, can coerce and object into an array!
     const tmp = Array.from(moodObj).reduce((p, n) => p+n) / moodObj.length;
     this.setSevenDayAverageMood(tmp);
   },
