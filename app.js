@@ -26,6 +26,10 @@ const App = Object.freeze(Object.create({
     document.getElementById('moodValue').innerHTML = value;
   },
   
+  "setSevenDayAverageMood": function(value) {
+    document.getElementById("sevenDayAverageMood").value = value;  
+  },
+  
   "setupEventHandlers": function() {
      // Save button event handler.
     document.getElementById("save").addEventListener("click", () => {
@@ -89,10 +93,11 @@ const App = Object.freeze(Object.create({
   
   "showHistory": function(data) {
     const tbody = document.querySelector("#historyTable");
+    const moodObj = { "length": 0 };
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
-    Object.keys(data).forEach((obj) => {
+    Object.keys(data).forEach((obj, count) => {
       const row = document.createElement('tr');
       const date = document.createElement('td');
       const mood = document.createElement('td');
@@ -104,7 +109,12 @@ const App = Object.freeze(Object.create({
       const year = dt.getFullYear();
       const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
       const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
-
+      
+      if(data[obj]) {
+        moodObj.length++;
+        moodObj[count] = data[obj].mood;
+      }
+      
       date.innerHTML = day + "/" + month + "/" + year;
       mood.innerHTML = (data[obj]) ? data[obj].mood : "-";
       notes.innerHTML = (data[obj] && data[obj].notes !== "") ? data[obj].notes : "-";
@@ -116,6 +126,9 @@ const App = Object.freeze(Object.create({
       row.appendChild(notes);
       tbody.appendChild(row);
     });
+    
+    const tmp = Array.from(moodObj).reduce((p, n) => p+n) / moodObj.length;
+    this.setSevenDayAverageMood(tmp);
   },
   
   "init": function() {
