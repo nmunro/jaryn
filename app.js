@@ -115,9 +115,9 @@ const App = Object.freeze(Object.create({
       const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
 
       date.innerHTML = day + "/" + month + "/" + year;
-      mood.innerHTML = (data[obj]) ? data[obj].mood : "";
-      notes.innerHTML = (data[obj]) ? data[obj].notes : "";
-      feelings.innerHTML = (data[obj]) ? data[obj].feelings.reduce((p, n) => p + ", " + n) : "";
+      mood.innerHTML = (data[obj]) ? data[obj].mood : "-";
+      notes.innerHTML = (data[obj]) ? data[obj].notes : "-";
+      feelings.innerHTML = (data[obj]) ? data[obj].feelings.reduce((p, n) => p + ", " + n) : "-";
 
       row.appendChild(date);
       row.appendChild(mood);
