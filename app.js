@@ -50,7 +50,7 @@ const App = Object.freeze(Object.create({
       data.notes = notes;
       data.feelings = feelings.map((node) => node.id); 
       
-      Jaryn.updateDiary(data, () => this.init());
+      VFS.updateDiary(data, () => this.init());
     });
 
     // Add event handlers.
@@ -123,10 +123,10 @@ const App = Object.freeze(Object.create({
     this.setupEventHandlers();
     this.setMoodValue("5");
     
-    Jaryn.loadConfig((conf) => {
+    VFS.loadConfig((conf) => {
       this.showAverageMood(conf.averageMood);
       this.showAverageFeelings(conf.averageEmotion);
-      Jaryn.getSevenDayHistory(d => this.showHistory(d));
+      VFS.getSevenDayHistory(d => this.showHistory(d));
     });
   } 
 }));
