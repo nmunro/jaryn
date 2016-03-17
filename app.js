@@ -50,13 +50,7 @@ const App = Object.freeze(Object.create({
       data.notes = notes;
       data.feelings = feelings.map((node) => node.id); 
       
-      Jaryn.updateDiary(data, (obj) => {
-        this.showHistory(obj);
-        
-        // Fix these
-        //this.displayAverageMood(obj);
-        //this.displayAverageFeelings(obj);
-      });
+      Jaryn.updateDiary(data, () => this.init());
     });
 
     // Add event handlers.
@@ -113,7 +107,7 @@ const App = Object.freeze(Object.create({
 
       date.innerHTML = day + "/" + month + "/" + year;
       mood.innerHTML = (data[obj]) ? data[obj].mood : "-";
-      notes.innerHTML = (data[obj]) ? data[obj].notes : "-";
+      notes.innerHTML = (data[obj] && data[obj].notes !== "") ? data[obj].notes : "-";
       feelings.innerHTML = (data[obj]) ? data[obj].feelings.reduce((p, n) => p + ", " + n) : "-";
 
       row.appendChild(date);
@@ -132,8 +126,6 @@ const App = Object.freeze(Object.create({
     Jaryn.loadConfig((conf) => {
       this.showAverageMood(conf.averageMood);
       this.showAverageFeelings(conf.averageEmotion);
-      
-      // Only read data files if config is loaded.
       Jaryn.getSevenDayHistory(d => this.showHistory(d));
     });
   } 
