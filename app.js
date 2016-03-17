@@ -98,22 +98,26 @@ const App = Object.freeze(Object.create({
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
+    console.log("Data");
+    console.log(data);
     
-    Object.keys(data).reverse().forEach((obj) => {
+    Object.keys(data).forEach((obj) => {
       const row = document.createElement('tr');
       const date = document.createElement('td');
       const mood = document.createElement('td');
       const feelings = document.createElement('td');
       const notes = document.createElement('td');
-      const dt = new Date(data[obj].date);
+      
+      const dt = new Date();
+      dt.setTime(obj);
       const year = dt.getFullYear();
       const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
       const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
 
       date.innerHTML = day + "/" + month + "/" + year;
-      mood.innerHTML = data[obj].mood;
-      notes.innerHTML = data[obj].notes;
-      feelings.innerHTML = data[obj].feelings.reduce((p, n) => p + ", " + n);
+      mood.innerHTML = (data[obj]) ? data[obj].mood : "";
+      notes.innerHTML = (data[obj]) ? data[obj].notes : "";
+      feelings.innerHTML = (data[obj]) ? data[obj].feelings.reduce((p, n) => p + ", " + n) : "";
 
       row.appendChild(date);
       row.appendChild(mood);
@@ -133,7 +137,7 @@ const App = Object.freeze(Object.create({
       this.showAverageFeelings(conf.averageEmotion);
       
       // Only read data files if config is loaded.
-      Jaryn.loadHistory(Jaryn.getThisMonthsJSON(), d => this.showHistory(d));
+      Jaryn.getSevenDayHistory(d => this.showHistory(d));
     });
   } 
 }));
