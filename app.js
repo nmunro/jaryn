@@ -98,9 +98,6 @@ const App = Object.freeze(Object.create({
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
-    console.log("Data");
-    console.log(data);
-    
     Object.keys(data).forEach((obj) => {
       const row = document.createElement('tr');
       const date = document.createElement('td');
