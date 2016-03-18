@@ -16,8 +16,7 @@ const App = Object.freeze(Object.create({
   "setDate": function() {
     const now = new Date();
     const date = document.querySelector("#date");
-    const month = ((now.getMonth() +1) < 10) ? "" + 0 + (now.getMonth()+1) : now.getMonth()+1;
-    const day = (now.getDate() < 10) ? "" + 0 + now.getDate() : now.getDate();
+    const {month, day} = DateUtil.getYYYYMMDD(now);
       
     date.innerHTML = day + "/" + month + "/" + now.getFullYear();
   },
@@ -40,14 +39,12 @@ const App = Object.freeze(Object.create({
       const notes = document.getElementById("notes").value;
       const nodes = document.getElementsByClassName("emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const date = now.getDate();
+      const {year, month, day} = DateUtil.getYYYYMMDD(now);
       
       now.setTime(0);
       now.setYear(year);
       now.setMonth(month);
-      now.setDate(date);
+      now.setDate(day);
       
       data.id = now.getTime();
       data.date = now;
@@ -107,9 +104,7 @@ const App = Object.freeze(Object.create({
       
       const dt = new Date();
       dt.setTime(obj);
-      const year = dt.getFullYear();
-      const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
-      const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
+      const {year, month, day} = DateUtil.getYYYYMMDD(dt);
       
       if(data[obj]) moodObj.push(data[obj].mood);
       

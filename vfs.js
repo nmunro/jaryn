@@ -102,9 +102,7 @@ const VFS = Object.freeze(Object.create({
    * @param function cb Callback to execute when name generated.
    */
   "getJSONForDate": function(date, cb) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1 < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-    
+    const {year, month} = DateUtil.getYYYYMMDD(date);
     return year + "-" + month + ".json";
   },
   
