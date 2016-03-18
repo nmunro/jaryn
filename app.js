@@ -26,8 +26,9 @@ const App = Object.freeze(Object.create({
     document.getElementById('moodValue').innerHTML = value;
   },
   
-  "setSevenDayAverageMood": function(value) {
-    document.getElementById("sevenDayAverageMood").value = value;  
+  "setSevenDayAverageMood": function(val) {
+    document.getElementById("sevenDayAverageMood").value = val;  
+    document.getElementById("sevenDayAverageMoodLabel").innerHTML = val * 10 + "%";
   },
   
   "setupEventHandlers": function() {
@@ -124,9 +125,7 @@ const App = Object.freeze(Object.create({
       tbody.appendChild(row);
     });
     
-    // Hah, epic, can coerce and object into an array!
-    const tmp = moodObj.reduce((p, n) => p+n) / moodObj.length;
-    this.setSevenDayAverageMood(tmp);
+    this.setSevenDayAverageMood(moodObj.reduce((p, n) => p+n) / moodObj.length);
   },
   
   "init": function() {
