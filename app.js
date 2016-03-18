@@ -93,7 +93,7 @@ const App = Object.freeze(Object.create({
   
   "showHistory": function(data) {
     const tbody = document.querySelector("#historyTable");
-    const moodObj = { "length": 0 };
+    const moodObj = [];
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
@@ -110,10 +110,7 @@ const App = Object.freeze(Object.create({
       const month = (dt.getMonth() + 1 < 10) ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1;
       const day = (dt.getDate() < 10) ? "0" + dt.getDate() : dt.getDate();
       
-      if(data[obj]) {
-        moodObj.length++;
-        moodObj[count] = data[obj].mood;
-      }
+      if(data[obj]) moodObj.push(data[obj].mood);
       
       date.innerHTML = day + "/" + month + "/" + year;
       mood.innerHTML = (data[obj]) ? data[obj].mood : "-";
@@ -128,7 +125,7 @@ const App = Object.freeze(Object.create({
     });
     
     // Hah, epic, can coerce and object into an array!
-    const tmp = Array.from(moodObj).reduce((p, n) => p+n) / moodObj.length;
+    const tmp = moodObj.reduce((p, n) => p+n) / moodObj.length;
     this.setSevenDayAverageMood(tmp);
   },
   
