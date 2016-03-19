@@ -22,8 +22,8 @@ const App = Object.freeze(Object.create({
   },
   
   "setSevenDayAverageMood": function(val) {
-    document.querySelector("#sevenDayAverageMood").value = val;  
-    document.querySelector("#sevenDayAverageMoodLabel").innerHTML = `${val*10}%`;
+    document.querySelector("#moodMeter").value = val*10;  
+    document.querySelector("#moodMeterLbl").innerHTML = `${Math.floor(val*10)}%`;
   },
   
   "setupEventHandlers": function() {
