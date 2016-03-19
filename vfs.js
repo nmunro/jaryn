@@ -57,17 +57,15 @@ const VFS = Object.freeze(Object.create({
   "getSevenDayHistory": function(cb) {
     // Get all the keys we want to get.
     const obj = {};
-    const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map(num => {
+    const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map((num) => {
       const dayOffset = ((1000*60)*60)*24;
       const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const date = now.getDate();
+      const {year, month, day} = DateUtil.getYYYYMMDD(now);
       
       now.setTime(0);
       now.setYear(year);
       now.setMonth(month);
-      now.setDate(date);
+      now.setDate(day);
       
       now.setTime(now-(dayOffset*num));
       return now.getTime();
@@ -75,22 +73,14 @@ const VFS = Object.freeze(Object.create({
       const dt = new Date();
       dt.setTime(date);
       const year = dt.getFullYear();
-      const m = dt.getMonth()+1;
-      const month = (m < 10) ? "0" + m : m;
-      const fn = year + '-' + month + '.json';
+      const month = (dt.getMonth() < 10) ? `0${dt.getMonth()}` : dt.getMonth();
+      const fn = `${year}-${month}.json`;
       
-      this.loadHistory(fn, data => {
+      this.loadHistory(fn, (data) => {
         obj[date] = data[date];
         if(count === arr.length-1) cb(obj);
       });
     });
-  },
-  
-  /**
-   * getThisMonthsJSON is a convenience function to get the current data file.
-   */
-  "getThisMonthsJSON": function() {
-    return this.getJSONForDate(new Date());
   },
   
   /**
@@ -101,9 +91,9 @@ const VFS = Object.freeze(Object.create({
    * @param Date date The date to get the history file for.
    * @param function cb Callback to execute when name generated.
    */
-  "getJSONForDate": function(date, cb) {
-    const {year, month} = DateUtil.getYYYYMMDD(date);
-    return year + "-" + month + ".json";
+  "getThisMonthsJSON": function(cb) {
+    const {year, month} = DateUtil.getYYYYMMDD();
+    return `${year}-${month}.json`;
   },
   
   /**
@@ -168,7 +158,6 @@ const VFS = Object.freeze(Object.create({
     const fn = this.getThisMonthsJSON();
     const writeData = (data) => {
       data[day.id] = day;
-      
       this.writeJSON({
         "fileName": fn,
         "data": data,

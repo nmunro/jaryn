@@ -14,30 +14,27 @@ const App = Object.freeze(Object.create({
   },
   
   "setDate": function() {
-    const now = new Date();
-    const date = document.querySelector("#date");
-    const {month, day} = DateUtil.getYYYYMMDD(now);
-      
-    date.innerHTML = day + "/" + month + "/" + now.getFullYear();
+    const {year, month, day} = DateUtil.getYYYYMMDD(new Date());
+    document.querySelector("#date").innerHTML = `${day}/${month}/${year}`;
   },
   
   "setMoodValue": function(value) {
-    document.getElementById('moodValue').innerHTML = value;
+    document.querySelector('#moodValue').innerHTML = value;
   },
   
   "setSevenDayAverageMood": function(val) {
-    document.getElementById("sevenDayAverageMood").value = val;  
-    document.getElementById("sevenDayAverageMoodLabel").innerHTML = val * 10 + "%";
+    document.querySelector("#sevenDayAverageMood").value = val;  
+    document.querySelector("#sevenDayAverageMoodLabel").innerHTML = `${val*10}%`;
   },
   
   "setupEventHandlers": function() {
      // Save button event handler.
-    document.getElementById("save").addEventListener("click", () => {
+    document.querySelector("#save").addEventListener("click", () => {
       const data = {};
       const now = new Date();
-      const mood = document.getElementById("mood").value;
-      const notes = document.getElementById("notes").value;
-      const nodes = document.getElementsByClassName("emotion");
+      const mood = document.querySelector("#mood").value;
+      const notes = document.querySelector("#notes").value;
+      const nodes = document.querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
       const {year, month, day} = DateUtil.getYYYYMMDD(now);
       
@@ -60,11 +57,11 @@ const App = Object.freeze(Object.create({
       div.addEventListener("click", (e) => this.toggleDiv(div));
     });
   
-    document.getElementById('mood').addEventListener('change', (event) => {
+    document.querySelector("#mood").addEventListener('change', (event) => {
       this.setMoodValue(event.target.value);
     });
 
-    Array.from(document.getElementsByClassName("navLink")).forEach((nav) => {
+    Array.from(document.querySelectorAll(".navLink")).forEach((nav) => {
       nav.addEventListener("click", (e) => {
         const contentNodes = Array.from(document.querySelectorAll(".contentDiv"));
         const navNodes = Array.from(document.querySelectorAll(".navLink"));
@@ -90,8 +87,8 @@ const App = Object.freeze(Object.create({
   },
   
   "showHistory": function(data) {
-    const tbody = document.querySelector("#historyTable");
     const moodObj = [];
+    const tbody = document.querySelector("#historyTable");
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
@@ -104,11 +101,13 @@ const App = Object.freeze(Object.create({
       
       const dt = new Date();
       dt.setTime(obj);
-      const {year, month, day} = DateUtil.getYYYYMMDD(dt);
+      const year = dt.getFullYear();
+      const month = (dt.getMonth() < 10) ? `0${dt.getMonth()}` : dt.getMonth();
+      const day = dt.getDate();
       
       if(data[obj]) moodObj.push(data[obj].mood);
       
-      date.innerHTML = day + "/" + month + "/" + year;
+      date.innerHTML = `${day}/${month}/${year}`;
       mood.innerHTML = (data[obj]) ? data[obj].mood : "-";
       notes.innerHTML = (data[obj] && data[obj].notes !== "") ? data[obj].notes : "-";
       feelings.innerHTML = (data[obj]) ? data[obj].feelings.reduce((p, n) => p + ", " + n) : "-";
@@ -125,15 +124,15 @@ const App = Object.freeze(Object.create({
   
   "init": function() {
     this.setDate();
-    this.setupEventHandlers();
     this.setMoodValue("5");
     
     VFS.loadConfig((conf) => {
       this.showAverageMood(conf.averageMood);
       this.showAverageFeelings(conf.averageEmotion);
-      VFS.getSevenDayHistory(d => this.showHistory(d));
+      VFS.getSevenDayHistory((d) => this.showHistory(d));
     });
   } 
 }));
 
+App.setupEventHandlers();
 App.init();

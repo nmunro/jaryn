@@ -1,5 +1,6 @@
 const DateUtil = Object.freeze(Object.create({
-  "getYYYYMMDD": function(date) {
+  "getYYYYMMDD": function() {
+    const date = new Date();
     return {
       "year": "" + date.getFullYear(),
       "month": "" + this.zeroPad(date.getMonth()+1),
