@@ -8,8 +8,7 @@ const App = Object.freeze(Object.create({
   "hideDiv": function(div) { div.classList.add("invisible"); },
   
   "toggleDiv": function(div) {
-    const nodes = Array.from(document.querySelectorAll(".contentDiv"));
-    nodes.forEach(this.hideDiv);
+    Array.from(document.querySelectorAll(".contentDiv")).forEach(this.hideDiv);
     this.showDiv(div);
   },
   
@@ -54,7 +53,7 @@ const App = Object.freeze(Object.create({
 
     // Add event handlers.
     Array.from(document.querySelectorAll(".contentDiv")).forEach((div) => {
-      div.addEventListener("click", (e) => this.toggleDiv(div));
+      div.addEventListener("click", () => this.toggleDiv(div));
     });
   
     document.querySelector("#mood").addEventListener('change', (event) => {
@@ -62,16 +61,13 @@ const App = Object.freeze(Object.create({
     });
 
     Array.from(document.querySelectorAll(".navLink")).forEach((nav) => {
-      nav.addEventListener("click", (e) => {
-        const contentNodes = Array.from(document.querySelectorAll(".contentDiv"));
-        const navNodes = Array.from(document.querySelectorAll(".navLink"));
+      nav.addEventListener("click", (event) => {
         const target = nav.firstChild.getAttribute("data-target");
-        
-        contentNodes.forEach(this.hideDiv);
-        navNodes.forEach(this.hideNav);
+        Array.from(document.querySelectorAll(".contentDiv")).forEach(this.hideDiv);
+        Array.from(document.querySelectorAll(".navLink")).forEach(this.hideNav);
         
         this.showDiv(document.querySelector("#" + target));
-        this.showNav(e.target.parentNode);
+        this.showNav(event.target.parentNode);
       });
     }); 
   },
@@ -81,9 +77,8 @@ const App = Object.freeze(Object.create({
   },
   
   // Figure out what to do with this!
-  "showAverageFeelings": function(allEmotions) {
-    const emotions = document.querySelector("#averageEmotions");
-    emotions.innerHTML = allEmotions.join(", ");
+  "showAverageFeelings": function(emotions) {
+    document.querySelector("#averageEmotions").innerHTML = emotions.join(", ");
   },
   
   "showHistory": function(data) {
