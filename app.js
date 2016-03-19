@@ -48,7 +48,7 @@ const App = Object.freeze(Object.create({
       data.notes = notes;
       data.feelings = feelings.map((node) => node.id); 
       
-      VFS.updateDiary(data, () => this.init());
+      VFS.updateDiary(data, this.init);
     });
 
     // Add event handlers.
@@ -97,12 +97,12 @@ const App = Object.freeze(Object.create({
       const dt = new Date();
       dt.setTime(obj);
       const year = dt.getFullYear();
-      const month = (dt.getMonth() < 10) ? `0${dt.getMonth()}` : dt.getMonth();
+      const month = (dt.getMonth()+1 < 10) ? `0${dt.getMonth()+1}` : dt.getMonth()+1;
       const day = dt.getDate();
       
       if(data[obj]) moodObj.push(data[obj].mood);
       
-      date.innerHTML = `${day}/${month}/${year}`;
+      date.innerHTML = `${day}/${(month)}/${year}`;
       mood.innerHTML = (data[obj]) ? data[obj].mood : "-";
       notes.innerHTML = (data[obj] && data[obj].notes !== "") ? data[obj].notes : "-";
       feelings.innerHTML = (data[obj]) ? data[obj].feelings.reduce((p, n) => p + ", " + n) : "-";
@@ -114,6 +114,8 @@ const App = Object.freeze(Object.create({
       tbody.appendChild(row);
     });
     
+    // Bail out if there's no data.
+    if(moodObj.length === 0) return;
     this.setSevenDayAverageMood(moodObj.reduce((p, n) => p+n) / moodObj.length);
   },
   

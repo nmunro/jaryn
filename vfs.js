@@ -56,29 +56,34 @@ const VFS = Object.freeze(Object.create({
    */
   "getSevenDayHistory": function(cb) {
     // Get all the keys we want to get.
-    const obj = {};
+    const obj = [];
+    const files = new Set();
+    
+    // Get last 7 dates.
     const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map((num) => {
       const dayOffset = ((1000*60)*60)*24;
       const now = new Date();
-      const {year, month, day} = DateUtil.getYYYYMMDD(now);
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const day = now.getDate();
       
       now.setTime(0);
       now.setYear(year);
       now.setMonth(month);
       now.setDate(day);
       
+      // Get the file(s) these dates exist in.
+      files.add(`${year}-${DateUtil.zeroPad(month+1)}.json`);
+      
       now.setTime(now-(dayOffset*num));
       return now.getTime();
-    }).forEach((date, count, arr) => {
-      const dt = new Date();
-      dt.setTime(date);
-      const year = dt.getFullYear();
-      const month = (dt.getMonth() < 10) ? `0${dt.getMonth()}` : dt.getMonth();
-      const fn = `${year}-${month}.json`;
-      
+    });
+    
+    // Read the last 7 dates into memory.
+    [...files].forEach((fn, count, arr) => {
       this.loadHistory(fn, (data) => {
-        obj[date] = data[date];
-        if(count === arr.length-1) cb(obj);
+        dates.forEach((date) => obj[date] = data[date]);
+        if (count === arr.length-1) cb(obj);
       });
     });
   },
