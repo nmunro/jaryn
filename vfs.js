@@ -82,6 +82,7 @@ const VFS = Object.freeze(Object.create({
     // Read the last 7 dates into memory.
     [...files].forEach((fn, count, arr) => {
       this.loadHistory(fn, (data) => {
+        console.log(data);
         dates.forEach((date) => obj[date] = data[date]);
         if (count === arr.length-1) cb(obj);
       });
@@ -163,6 +164,7 @@ const VFS = Object.freeze(Object.create({
     const fn = this.getThisMonthsJSON();
     const writeData = (data) => {
       data[day.id] = day;
+      console.dir(day);
       this.writeJSON({
         "fileName": fn,
         "data": data,

@@ -35,7 +35,9 @@ const App = Object.freeze(Object.create({
       const notes = document.querySelector("#notes").value;
       const nodes = document.querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
-      const {year, month, day} = DateUtil.getYYYYMMDD(now);
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const day = now.getDate();
       
       now.setTime(0);
       now.setYear(year);
@@ -48,7 +50,7 @@ const App = Object.freeze(Object.create({
       data.notes = notes;
       data.feelings = feelings.map((node) => node.id); 
       
-      VFS.updateDiary(data, this.init);
+      VFS.updateDiary(data, () => this.init());
     });
 
     // Add event handlers.
