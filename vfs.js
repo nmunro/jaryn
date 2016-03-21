@@ -73,7 +73,7 @@ const VFS = Object.freeze(Object.create({
       now.setDate(day);
       
       // Get the file(s) these dates exist in.
-      files.add(`${year}-${DateUtil.zeroPad(month+1)}.json`);
+      files.add(`${now.getFullYear()}-${DateUtil.zeroPad(now.getMonth()+1)}.json`);
       
       now.setTime(now-(dayOffset*num));
       return now.getTime();
