@@ -61,19 +61,16 @@ const VFS = Object.freeze(Object.create({
     
     // Get last 7 dates.
     const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map((num) => {
-      const dayOffset = ((1000*60)*60)*24;
       const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const day = now.getDate();
+      const dayOffset = ((1000*60)*60)*24;
       
-      now.setTime(0);
-      now.setYear(year);
-      now.setMonth(month);
-      now.setDate(day);
+      now.setHours(0);
+      now.setMinutes(0);
+      now.setSeconds(0);
+      now.setMilliseconds(0);
       
       // Get the file(s) these dates exist in.
-      files.add(`${now.getFullYear()}-${DateUtil.zeroPad(now.getMonth()+1)}.json`);
+      files.add(`${now.getFullYear()}-${DateUtil.zeroPad(now.getMonth()+1)}`);
       
       now.setTime(now-(dayOffset*num));
       return now.getTime();
@@ -81,7 +78,8 @@ const VFS = Object.freeze(Object.create({
     
     // Read the last 7 dates into memory.
     [...files].forEach((fn, count, arr) => {
-      this.loadHistory(fn, (data) => {
+      // Add .json suffix.
+      this.loadHistory(`${fn}.json`, (data) => {
         dates.forEach((date) => obj[date] = data[date]);
         if (count === arr.length-1) cb(obj);
       });
@@ -111,17 +109,14 @@ const VFS = Object.freeze(Object.create({
    * callback functions.
    */
   "readJSON": function(obj) {
-    console.log(`Reading: ${obj.fileName}.`);
     chrome.syncFileSystem.requestFileSystem((fs) => {
       fs.root.getFile(obj.fileName,
         { "create": false },
         (fileEntry) => {
           fileEntry.file((file) => {
-            const fileReader = new FileReader();
-            fileReader.onload = (e) => {
-              obj.onSuccess(JSON.parse(fileReader.result));
-            };
-            fileReader.readAsText(file);
+            const fr = new FileReader();
+            fr.onload = (e) => obj.onSuccess(JSON.parse(fr.result));
+            fr.readAsText(file);
           });  
         }, obj.onFailure);    
     });
@@ -135,7 +130,6 @@ const VFS = Object.freeze(Object.create({
    * failure callback functions.
    */
   "writeJSON": function(obj) {
-    console.log(`Writing: ${obj.fileName}.`);
     chrome.syncFileSystem.requestFileSystem((fs) => {
       fs.root.getFile(obj.fileName,
       { "create": true },

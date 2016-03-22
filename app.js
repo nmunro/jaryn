@@ -29,20 +29,17 @@ const App = Object.freeze(Object.create({
   "setupEventHandlers": function() {
      // Save button event handler.
     document.querySelector("#save").addEventListener("click", () => {
-      const data = {};
-      const now = new Date();
       const mood = document.querySelector("#mood").value;
       const notes = document.querySelector("#notes").value;
       const nodes = document.querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const day = now.getDate();
+      const now = new Date();
+      const data = {};
       
-      now.setTime(0);
-      now.setYear(year);
-      now.setMonth(month);
-      now.setDate(day);
+      now.setHours(0);
+      now.setMinutes(0);
+      now.setSeconds(0);
+      now.setMilliseconds(0);
       
       data.id = now.getTime();
       data.date = now;
@@ -89,25 +86,25 @@ const App = Object.freeze(Object.create({
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
-    Object.keys(data).forEach((obj, count) => {
+    Object.keys(data).forEach((obj) => {
       const row = document.createElement('tr');
       const date = document.createElement('td');
       const mood = document.createElement('td');
       const feelings = document.createElement('td');
       const notes = document.createElement('td');
+      const dt = new Date(parseInt(obj, 10));
+      const fn = (p, n) => `${p}, ${n}`;
       
-      const dt = new Date();
-      dt.setTime(obj);
-      const year = dt.getFullYear();
-      const month = (dt.getMonth()+1 < 10) ? `0${dt.getMonth()+1}` : dt.getMonth()+1;
-      const day = dt.getDate();
+      if(!data[obj]) return;
       
-      if(data[obj]) moodObj.push(data[obj].mood);
+      moodObj.push(data[obj].mood);
       
-      date.innerHTML = `${day}/${(month)}/${year}`;
-      mood.innerHTML = (data[obj]) ? data[obj].mood : "-";
-      notes.innerHTML = (data[obj] && data[obj].notes !== "") ? data[obj].notes : "-";
-      feelings.innerHTML = (data[obj]) ? data[obj].feelings.reduce((p, n) => p + ", " + n) : "-";
+      mood.innerHTML = data[obj].mood;
+      feelings.innerHTML = data[obj].feelings.reduce(fn);
+      notes.innerHTML = (data[obj].notes !== "") ? data[obj].notes : "-";
+      date.innerHTML = `${dt.getDate()}/`;
+      date.innerHTML += `${DateUtil.zeroPad(dt.getMonth()+1)}/`;
+      date.innerHTML += `${dt.getFullYear()}`;
 
       row.appendChild(date);
       row.appendChild(mood);
