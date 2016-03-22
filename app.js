@@ -99,7 +99,7 @@ const App = Object.freeze(Object.create({
       
       moodObj.push(data[obj].mood);
       
-      mood.innerHTML = data[obj].mood;
+      mood.innerHTML = `${(data[obj].mood*10)}%`;
       feelings.innerHTML = data[obj].feelings.reduce(fn);
       notes.innerHTML = (data[obj].notes !== "") ? data[obj].notes : "-";
       date.innerHTML = `${dt.getDate()}/`;
