@@ -1,8 +1,53 @@
+const configFile = "jaryn-config.json";
+
+/**
+ * getDataFile gets the data file for the given filename and executes the 
+ * given callback with the data stored in the file passed in as an argument.
+ * 
+ * readJSON does NOT create a file if it doesn't already exist.
+ * 
+ * @param object obj An object containing the file name and success/failure
+ * callback functions.
+ */
+const readJSON = (obj) => {
+  chrome.syncFileSystem.requestFileSystem((fs) => {
+    fs.root.getFile(obj.fileName,
+      { "create": false },
+      (fileEntry) => {
+        fileEntry.file((file) => {
+          const fr = new FileReader();
+          fr.onload = (e) => obj.onSuccess(JSON.parse(fr.result));
+          fr.readAsText(file);
+        });  
+      }, obj.onFailure);    
+  });
+};
+
+/**
+ * This writes data to the specified file, creating it if it does not exist.
+ * Ensure data is a JSON object!
+ * 
+ * @param object obj An object containing the file name, data and success or
+ * failure callback functions.
+ */
+const writeJSON = (obj) => {
+  chrome.syncFileSystem.requestFileSystem((fs) => {
+    fs.root.getFile(obj.fileName,
+    { "create": true },
+    (file) => {
+      // Zero out the file contents.
+      file.createWriter((writer) => writer.truncate(0));
+      // Re-write with new data.
+      file.createWriter((writer) => {
+        const blob = new Blob([JSON.stringify(obj.data)], { "type": "text/plain" });
+        writer.write(blob);
+        obj.onSuccess(obj.data);
+      });
+    }, obj.onFailure);
+  }); 
+};
+
 const VFS = Object.freeze(Object.create({
-  "getConfigFile": function() {
-    return "jaryn-config.json";
-  },
-  
   /**
    * loadConfig loads a config object from the config file and passes the 
    * config into the callback.
@@ -12,8 +57,8 @@ const VFS = Object.freeze(Object.create({
   "loadConfig": function(cb) {
     const config = {"averageMood": 5, "moodCount": 0, "averageEmotion": []};
     
-    this.readJSON({
-      "fileName": this.getConfigFile(),
+    readJSON({
+      "fileName": configFile,
       "onSuccess": cb,
       "onFailure": (err) => this.saveConfig(config, cb)
     });
@@ -26,8 +71,8 @@ const VFS = Object.freeze(Object.create({
    * @param function cb Callback to execute when saved.
   */
   "saveConfig": function(config, cb) {
-    this.writeJSON({
-      "fileName": this.getConfigFile(),
+    writeJSON({
+      "fileName": configFile,
       "data": config,
       "onSuccess": cb,
       "onFailure": (err) => console.log(err)
@@ -41,7 +86,7 @@ const VFS = Object.freeze(Object.create({
    * @param function cb Callback to execute once history has been loaded.
    */
   "loadHistory": function(fn, cb) {
-    this.readJSON({
+    readJSON({
       "fileName": fn,
       "onSuccess": cb,
       "onFailure": (err) => cb([])
@@ -100,53 +145,6 @@ const VFS = Object.freeze(Object.create({
   },
   
   /**
-   * getDataFile gets the data file for the given filename and executes the 
-   * given callback with the data stored in the file passed in as an argument.
-   * 
-   * readJSON does NOT create a file if it doesn't already exist.
-   * 
-   * @param object obj An object containing the file name and success/failure
-   * callback functions.
-   */
-  "readJSON": function(obj) {
-    chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile(obj.fileName,
-        { "create": false },
-        (fileEntry) => {
-          fileEntry.file((file) => {
-            const fr = new FileReader();
-            fr.onload = (e) => obj.onSuccess(JSON.parse(fr.result));
-            fr.readAsText(file);
-          });  
-        }, obj.onFailure);    
-    });
-  },
-  
-  /**
-   * This writes data to the specified file, creating it if it does not exist.
-   * Ensure data is a JSON object!
-   * 
-   * @param object obj An object containing the file name, data and success or
-   * failure callback functions.
-   */
-  "writeJSON": function(obj) {
-    chrome.syncFileSystem.requestFileSystem((fs) => {
-      fs.root.getFile(obj.fileName,
-      { "create": true },
-      (file) => {
-        // Zero out the file contents.
-        file.createWriter((writer) => writer.truncate(0));
-        // Re-write with new data.
-        file.createWriter((writer) => {
-          const blob = new Blob([JSON.stringify(obj.data)], { "type": "text/plain" });
-          writer.write(blob);
-          obj.onSuccess(obj.data);
-        });
-      }, obj.onFailure);
-    }); 
-  },
-  
-  /**
    * updateDiary takes a single entry and saves it to the current months 
    * history file.
    * 
@@ -158,7 +156,7 @@ const VFS = Object.freeze(Object.create({
     const writeData = (data) => {
       data[day.id] = day;
       console.dir(day);
-      this.writeJSON({
+      writeJSON({
         "fileName": fn,
         "data": data,
         "onSuccess": cb,
@@ -166,7 +164,7 @@ const VFS = Object.freeze(Object.create({
       });
     };
     
-    this.readJSON({
+    readJSON({
       "fileName": fn,
       "onSuccess": (data) => writeData(data),
       "onFailure": () => writeData([])
