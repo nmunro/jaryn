@@ -13,8 +13,11 @@ const App = Object.freeze(Object.create({
   },
   
   "setDate": function() {
-    const {year, month, day} = DateUtil.getYYYYMMDD(new Date());
-    document.querySelector("#date").innerHTML = `${day}/${month}/${year}`;
+    const text = [6, 0].map((n) => {
+      const {year, month, day} = DateUtil.getYYYYMMDD(n);
+      return `${day}/${month}/${year}`;
+    });
+    document.querySelector("#date").innerHTML = text.join("&nbsp;-&nbsp;");
   },
   
   "setMoodValue": function(value) {
@@ -66,15 +69,6 @@ const App = Object.freeze(Object.create({
     }); 
   },
   
-  "showAverageMood": function(data) {
-    const moods = document.querySelector("#averageMood").innerHTML = data;
-  },
-  
-  // Figure out what to do with this!
-  "showAverageFeelings": function(emotions) {
-    document.querySelector("#averageEmotions").innerHTML = emotions.join(", ");
-  },
-  
   "showHistory": function(data) {
     const moodObj = [];
     const tbody = document.querySelector("#historyTable");
@@ -118,8 +112,6 @@ const App = Object.freeze(Object.create({
     this.setMoodValue("5");
     
     VFS.loadConfig((conf) => {
-      this.showAverageMood(conf.averageMood);
-      this.showAverageFeelings(conf.averageEmotion);
       VFS.getSevenDayHistory((d) => this.showHistory(d));
     });
   } 

@@ -2,8 +2,9 @@ const DateUtil = Object.freeze(Object.create({
   /**
    * Use this function for display purposes only.
    */
-  "getYYYYMMDD": function() {
+  "getYYYYMMDD": function(offset) {
     const date = new Date();
+    if(offset) date.setDate(date.getDate()-offset);
     return {
       "year": "" + date.getFullYear(),
       "month": "" + this.zeroPad(date.getMonth()+1),
