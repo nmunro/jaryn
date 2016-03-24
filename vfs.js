@@ -12,7 +12,7 @@ const configFile = "jaryn-config.json";
 const readJSON = (obj) => {
   chrome.syncFileSystem.requestFileSystem((fs) => {
     fs.root.getFile(obj.fileName,
-      { "create": false },
+      obj.permissions,
       (fileEntry) => {
         fileEntry.file((file) => {
           const fr = new FileReader();
@@ -33,7 +33,7 @@ const readJSON = (obj) => {
 const writeJSON = (obj) => {
   chrome.syncFileSystem.requestFileSystem((fs) => {
     fs.root.getFile(obj.fileName,
-    { "create": true },
+    obj.permissions,
     (file) => {
       // Zero out the file contents.
       file.createWriter((writer) => writer.truncate(0));
@@ -59,6 +59,7 @@ const VFS = Object.freeze(Object.create({
     
     readJSON({
       "fileName": configFile,
+      "permissions": { "create": false },
       "onSuccess": cb,
       "onFailure": (err) => this.saveConfig(config, cb)
     });
@@ -73,6 +74,7 @@ const VFS = Object.freeze(Object.create({
   "saveConfig": function(config, cb) {
     writeJSON({
       "fileName": configFile,
+      "permissions": { "create": true },
       "data": config,
       "onSuccess": cb,
       "onFailure": (err) => console.log(err)
@@ -88,6 +90,7 @@ const VFS = Object.freeze(Object.create({
   "loadHistory": function(fn, cb) {
     readJSON({
       "fileName": fn,
+      "permissions": { "create": true },
       "onSuccess": cb,
       "onFailure": (err) => cb([])
     });
@@ -155,9 +158,9 @@ const VFS = Object.freeze(Object.create({
     const fn = this.getThisMonthsJSON();
     const writeData = (data) => {
       data[day.id] = day;
-      console.dir(day);
       writeJSON({
         "fileName": fn,
+        "permissions": { "create": true },
         "data": data,
         "onSuccess": cb,
         "onFailure": (err) => console.log(err)
@@ -166,6 +169,7 @@ const VFS = Object.freeze(Object.create({
     
     readJSON({
       "fileName": fn,
+      "permissions": { "create": false },
       "onSuccess": (data) => writeData(data),
       "onFailure": () => writeData([])
     });
