@@ -109,13 +109,8 @@ const VFS = Object.freeze(Object.create({
     
     // Get last 7 dates.
     const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map((num) => {
-      const now = new Date();
+      const now = DateUtil.getDate();
       const dayOffset = ((1000*60)*60)*24;
-      
-      now.setHours(0);
-      now.setMinutes(0);
-      now.setSeconds(0);
-      now.setMilliseconds(0);
       
       // Get the file(s) these dates exist in.
       files.add(`${now.getFullYear()}-${DateUtil.zeroPad(now.getMonth()+1)}`);

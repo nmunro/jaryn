@@ -33,13 +33,8 @@ const App = Object.freeze(Object.create({
       const notes = document.querySelector("#notes").value;
       const nodes = document.querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
-      const now = new Date();
+      const now = DateUtil.getDate();
       const data = {};
-      
-      now.setHours(0);
-      now.setMinutes(0);
-      now.setSeconds(0);
-      now.setMilliseconds(0);
       
       data.id = now.getTime();
       data.date = now;
