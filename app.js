@@ -13,7 +13,7 @@ const App = Object.freeze(Object.create({
   },
   
   "setDate": function() {
-    const text = [6, 0].map((n) => {
+    const text = [7, 0].map((n) => {
       const {year, month, day} = DateUtil.getYYYYMMDD(n);
       return `${day}/${month}/${year}`;
     });
@@ -84,7 +84,13 @@ const App = Object.freeze(Object.create({
       const dt = new Date(parseInt(obj, 10));
       const fn = (p, n) => `${p}, ${n}`;
       
-      if(!data[obj]) return;
+      if(!data[obj]) {
+        data[obj] = {
+          "mood": 0,
+          "feelings": ["-"],
+          "notes": "-"
+        };   
+      }
       
       moodObj.push(data[obj].mood);
       
