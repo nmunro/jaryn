@@ -85,6 +85,10 @@ const App = Object.freeze(Object.create({
     }); 
   },
   
+  "editHistory": function(event) {
+    console.log(event.target.parentNode);  
+  },
+  
   "showHistory": function(data) {
     const moodObj = [];
     const tbody = document.querySelector("#historyTable");
@@ -122,6 +126,9 @@ const App = Object.freeze(Object.create({
       row.appendChild(feelings);
       row.appendChild(notes);
       tbody.appendChild(row);
+      
+      // Add event handler for the row.
+      row.addEventListener("click", this.editHistory);
     });
     
     // Bail out if there's no data.
