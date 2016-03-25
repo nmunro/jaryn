@@ -76,9 +76,9 @@ const App = Object.freeze(Object.create({
     Array.from(document.querySelectorAll(".navLink")).forEach((nav) => {
       nav.addEventListener("click", (event) => {
         const target = nav.firstChild.getAttribute("data-target");
+        
         this.hideDivAll();
         this.hideNavAll();
-        
         this.showDiv(document.querySelector("#" + target));
         this.showNav(event.target.parentNode);
       });
@@ -132,10 +132,8 @@ const App = Object.freeze(Object.create({
   "init": function() {
     this.setDate();
     this.setMoodValue("5");
-    
     this.hideDivAll();
     this.hideNavAll();
-    
     this.showDiv(document.querySelector("#dashboardDiv"));
     this.showNav(document.querySelector("#dashboard").parentNode);
     

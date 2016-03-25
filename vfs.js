@@ -1,7 +1,7 @@
 const configFile = "jaryn-config.json";
 
 /**
- * getDataFile gets the data file for the given filename and executes the 
+ * readJSON gets the data file for the given filename and executes the 
  * given callback with the data stored in the file passed in as an argument.
  * 
  * readJSON does NOT create a file if it doesn't already exist.
@@ -24,7 +24,7 @@ const readJSON = (obj) => {
 };
 
 /**
- * This writes data to the specified file, creating it if it does not exist.
+ * writeJSON writes data to the specified file, creating it if it does not exist.
  * Ensure data is a JSON object!
  * 
  * @param object obj An object containing the file name, data and success or
@@ -97,9 +97,8 @@ const VFS = Object.freeze(Object.create({
   },
   
   /**
-   * This function gets the last five days of historical information.
+   * getSevenDayHistory gets the last seven days of historical information.
    * 
-   * @param Date date The date to start the history count from.
    * @param function cb The callback function to execute.
    */
   "getSevenDayHistory": function(cb) {
@@ -130,11 +129,10 @@ const VFS = Object.freeze(Object.create({
   },
   
   /**
-   * This function takes a date, parses the month and year from it
-   * and reads the JSON from that months <month>-<year>.json file.
+   * getThisMonthsJSON parses the month and year and reads the JSON from
+   * this months <month>-<year>.json file.
    * The supplied callback is then passed the data and executed.
    * 
-   * @param Date date The date to get the history file for.
    * @param function cb Callback to execute when name generated.
    */
   "getThisMonthsJSON": function(cb) {
