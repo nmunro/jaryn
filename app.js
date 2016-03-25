@@ -1,14 +1,30 @@
 const App = Object.freeze(Object.create({
-  "showNav": function(nav) { nav.classList.add("active"); },
+  "showNav": function(nav) {
+    nav.classList.add("active");
+  },
   
-  "hideNav": function(nav) { nav.classList.remove("active"); },
+  "hideNav": function(nav) {
+    nav.classList.remove("active");
+  },
   
-  "showDiv": function(div) { div.classList.remove("invisible"); },
+  "hideNavAll": function() {
+    Array.from(document.querySelectorAll(".navLink")).forEach(this.hideNav);
+  },
   
-  "hideDiv": function(div) { div.classList.add("invisible"); },
+  "showDiv": function(div) {
+    div.classList.remove("invisible");
+  },
+  
+  "hideDiv": function(div) {
+    div.classList.add("invisible");
+  },
+  
+  "hideDivAll": function() {
+    Array.from(document.querySelectorAll(".contentDiv")).forEach(this.hideDiv);
+  },
   
   "toggleDiv": function(div) {
-    Array.from(document.querySelectorAll(".contentDiv")).forEach(this.hideDiv);
+    this.hideDivAll();
     this.showDiv(div);
   },
   
@@ -60,8 +76,8 @@ const App = Object.freeze(Object.create({
     Array.from(document.querySelectorAll(".navLink")).forEach((nav) => {
       nav.addEventListener("click", (event) => {
         const target = nav.firstChild.getAttribute("data-target");
-        Array.from(document.querySelectorAll(".contentDiv")).forEach(this.hideDiv);
-        Array.from(document.querySelectorAll(".navLink")).forEach(this.hideNav);
+        this.hideDivAll();
+        this.hideNavAll();
         
         this.showDiv(document.querySelector("#" + target));
         this.showNav(event.target.parentNode);
@@ -117,8 +133,8 @@ const App = Object.freeze(Object.create({
     this.setDate();
     this.setMoodValue("5");
     
-    Array.from(document.querySelectorAll(".contentDiv")).forEach(this.hideDiv);
-    Array.from(document.querySelectorAll(".navLink")).forEach(this.hideNav);
+    this.hideDivAll();
+    this.hideNavAll();
     
     this.showDiv(document.querySelector("#dashboardDiv"));
     this.showNav(document.querySelector("#dashboard").parentNode);
