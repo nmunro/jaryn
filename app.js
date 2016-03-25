@@ -117,6 +117,12 @@ const App = Object.freeze(Object.create({
     this.setDate();
     this.setMoodValue("5");
     
+    Array.from(document.querySelectorAll(".contentDiv")).forEach(this.hideDiv);
+    Array.from(document.querySelectorAll(".navLink")).forEach(this.hideNav);
+    
+    this.showDiv(document.querySelector("#dashboardDiv"));
+    this.showNav(document.querySelector("#dashboard").parentNode);
+    
     VFS.loadConfig((conf) => {
       VFS.getSevenDayHistory((d) => this.showHistory(d));
     });
