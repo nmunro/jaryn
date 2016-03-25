@@ -29,7 +29,7 @@ const App = Object.freeze(Object.create({
   },
   
   "setDate": function() {
-    const text = [7, 0].map((n) => {
+    const text = [6, 0].map((n) => {
       const {year, month, day} = DateUtil.getYYYYMMDD(n);
       return `${day}/${month}/${year}`;
     });
