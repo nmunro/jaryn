@@ -27,80 +27,10 @@
             <li class="navLink"><a id="help" data-target="addDiv" href="#">Add Record</a></li>
             <li class="navLink"><a id="history" data-target="historyDiv" href="#">History</a></li>
             <li class="navLink"><a id="about" data-target="aboutDiv" href="#">About</a></li>
+            
+            <!-- These are invisible on purpose -->
+            <li class="navLink invisible"><a id="edit" data-target="editDiv" href="#">About</a></li>
           </ul>
-        </div>
-        
-        <div id="addDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
-          <h1 class="page-header">Add Record</h1>
-          <div class="row">
-            <label for="mood">Mood:&nbsp;<span id="moodValue"></span></label>
-            <input id="mood" name="mood" type="range" min="1" max="10" step="1" value="5"></input>
-          </div>
-          
-          <div class="row">
-            <div class="row">
-              <label for="feelings">Feelings:&nbsp;</label>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-3 col-xs-3">
-                <input id="positive" class="emotion" type="checkbox">Positive</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input id="alert" class="emotion" type="checkbox">Alert</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input id="bored" class="emotion" type="checkbox">Bored</input>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-3 col-xs-3">
-                <input id="confident" class="emotion" type="checkbox">Confident</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input id="frustrated" class="emotion" type="checkbox">Frustrated</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input id="relaxed" class="emotion" type="checkbox">Relaxed</input>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-3 col-xs-3">
-                <input id="ok/fine" class="emotion" type="checkbox">Ok/Fine</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input id="angry" class="emotion" type="checkbox">Angry</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input id="happy" class="emotion" type="checkbox">Happy</input>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-3 col-xs-3">
-                <input id="sad" class="emotion" type="checkbox">Sad</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input id="stressed" class="emotion" type="checkbox">Stressed</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input id="tired" class="emotion" type="checkbox">Tired</input>
-              </div>
-            </div>
-            <br/> 
-          </div>
-          
-          <div class="row">
-            <label>Notes:</label>
-            <textarea id="notes"></textarea>
-            <br/>
-          </div> 
-          
-          <div class="row">
-            <button id="save" class="btn btn-primary">Save</button>
-          </div>
         </div>
         
         <div id="dashboardDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -120,6 +50,159 @@
           </table>
         </div>
         
+        <div id="editDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
+          <h1 class="page-header">Edit Record:&nbsp;<span id="editDate"></span></h1>
+          <div class="row">
+            <label for="editMood">Mood:&nbsp;<span id="editMoodValue"></span></label>
+            <input id="editMood" name="editMood" type="range" min="1" max="10" step="1" value="5"></input>
+          </div>
+          <div class="row">
+            <div class="row">
+              <label>Feelings:&nbsp;</label>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input data-name="positive" class="emotion" type="checkbox">Positive</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="alert" class="emotion" type="checkbox">Alert</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="bored" class="emotion" type="checkbox">Bored</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input data-name="confident" class="emotion" type="checkbox">Confident</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="frustrated" class="emotion" type="checkbox">Frustrated</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="relaxed" class="emotion" type="checkbox">Relaxed</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input data-name="ok/fine" class="emotion" type="checkbox">Ok/Fine</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="angry" class="emotion" type="checkbox">Angry</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="happy" class="emotion" type="checkbox">Happy</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input data-name="sad" class="emotion" type="checkbox">Sad</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="stressed" class="emotion" type="checkbox">Stressed</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="tired" class="emotion" type="checkbox">Tired</input>
+              </div>
+            </div>
+            <br/> 
+          </div>
+          
+          <div class="row">
+            <label>Notes:</label>
+            <textarea id="editNotes" class="notes"></textarea>
+            <br/>
+          </div> 
+          
+          <div class="row">
+            <div class="btn-group" role="group" aria-label="button group">
+              <button id="resave" class="btn btn-primary">Save</button>
+              <button id="cancel" class="btn btn-danger">Cancel</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="addDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
+          <h1 class="page-header">Add Record</h1>
+          <div class="row">
+            <label for="addMood">Mood:&nbsp;<span id="addMoodValue"></span></label>
+            <input id="addMood" name="addMood" type="range" min="1" max="10" step="1" value="5"></input>
+          </div>
+          
+          <div class="row">
+            <div class="row">
+              <label>Feelings:&nbsp;</label>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input data-name="positive" class="emotion" type="checkbox">Positive</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="alert" class="emotion" type="checkbox">Alert</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="bored" class="emotion" type="checkbox">Bored</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input data-name="confident" class="emotion" type="checkbox">Confident</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="frustrated" class="emotion" type="checkbox">Frustrated</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="relaxed" class="emotion" type="checkbox">Relaxed</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input data-name="ok/fine" class="emotion" type="checkbox">Ok/Fine</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="angry" class="emotion" type="checkbox">Angry</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="happy" class="emotion" type="checkbox">Happy</input>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-3 col-xs-3">
+                <input data-name="sad" class="emotion" type="checkbox">Sad</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="stressed" class="emotion" type="checkbox">Stressed</input>
+              </div>
+              <div class="col-md-3 col-xs-3">
+                <input data-name="tired" class="emotion" type="checkbox">Tired</input>
+              </div>
+            </div>
+            <br/> 
+          </div>
+          
+          <div class="row">
+            <label>Notes:</label>
+            <textarea id="addNotes" class="notes"></textarea>
+            <br/>
+          </div> 
+          
+          <div class="row">
+            <button id="save" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+        
+        <div id="historyDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
+          <h1 class="page-header">All History</h1>
+          <h5>Not implemented yet.</h5>
+        </div>
+        
         <div id="aboutDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
           <h1 class="page-header">About</h1>
           <div class="row">
@@ -128,11 +211,6 @@
               This program is licenced under the AGPL-3, the terms of which are distributed with this programs source code.  
             </h3>
           </div>
-        </div>
-        
-        <div id="historyDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
-          <h1 class="page-header">All History</h1>
-          <h5>Not implemented yet.</h5>
         </div>
       </div>
     </div>

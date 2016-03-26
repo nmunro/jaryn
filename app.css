@@ -2,15 +2,20 @@
   display: none;
 }
 
-#notes {
+.notes {
   height: 100%;
   width: 100%;
 }
 
-#save {
+#save, .btn-group {
   width: 100%;
+}
+
+#resave, #cancel {
+  width: 50%;
 }
 
 #moodMeter {
   width: 100%;
 }
+
