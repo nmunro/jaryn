@@ -45,6 +45,13 @@ const App = Object.freeze(Object.create({
     document.querySelector("#moodMeterLbl").innerHTML = `${Math.floor(val*10)}%`;
   },
   
+  "clearHistoryEntry": function() {
+    Array.from(document.querySelectorAll(".emotion")).forEach((e) => e.checked = false);    
+    document.querySelector("#editNotes").innerHTML = "";
+    document.querySelector("#editMood").value = "0";
+    document.querySelector("#editMoodValue").innerHTML = "0%";
+  },
+  
   "setupEventHandlers": function() {
      // Save button event handler.
     document.querySelector("#save").addEventListener("click", () => {
@@ -62,19 +69,24 @@ const App = Object.freeze(Object.create({
       data.feelings = feelings.map((node) => node.getAttribute("data-name")); 
       
       // Have to use a function in this scope.
-      VFS.updateDiary(data, () => this.init());
+      VFS.updateDiary(data, () => {
+        this.init();
+        this.clearHistoryEntry();
+      });
     });
     
     document.querySelector("#resave").addEventListener("click", () => {
       // Override object.
+      // Clear input controls.
+      this.clearHistoryEntry();
       // Return to dashboard.
       console.log("Re-saving!");  
     });
     
     document.querySelector("#cancel").addEventListener("click", () => {
       // Clear inut controls.
+      this.clearHistoryEntry();
       // Return to dashboard.
-      console.log("Cancelling!");  
     });
 
     // Add event handlers.
@@ -111,6 +123,9 @@ const App = Object.freeze(Object.create({
         case "mood": 
           document.getElementById("editMoodValue").innerHTML = cell.innerHTML;
           document.getElementById("editMood").value = cell.innerHTML[0];
+          if(cell.innerHTML === "100%") {
+            document.getElementById("editMood").value += "0";
+          }
           break;
           
         case "feelings":
