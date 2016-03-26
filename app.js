@@ -57,6 +57,9 @@ const App = Object.freeze(Object.create({
     document.querySelector("#editNotes").innerHTML = "";
     document.querySelector("#editMood").value = "0";
     document.querySelector("#editMoodValue").innerHTML = "0%";
+    document.querySelector("#addNotes").innerHTML = "";
+    document.querySelector("#addMood").value = "0";
+    document.querySelector("#addMoodValue").innerHTML = "0%";
   },
   
   "setupEventHandlers": function() {
@@ -121,6 +124,7 @@ const App = Object.freeze(Object.create({
         this.hideNavAll();
         this.showDiv(document.querySelector(`#${target}`));
         this.showNav(event.target.parentNode);
+        this.clearHistoryEntry();
       });
     }); 
   },
