@@ -28,6 +28,13 @@ const App = Object.freeze(Object.create({
     this.showDiv(div);
   },
   
+  "showDefaultDashboard": function() {
+    this.hideDivAll();
+    this.hideNavAll();
+    this.showDiv(document.querySelector("#dashboardDiv"));
+    this.showNav(document.querySelector("#dashboard").parentNode);
+  },
+  
   "setDate": function() {
     const text = [6, 0].map((n) => {
       const {year, month, day} = DateUtil.getYYYYMMDD(n);
@@ -76,17 +83,29 @@ const App = Object.freeze(Object.create({
     });
     
     document.querySelector("#resave").addEventListener("click", () => {
-      // Override object.
-      // Clear input controls.
-      this.clearHistoryEntry();
-      // Return to dashboard.
-      console.log("Re-saving!");  
+      const mood = document.querySelector("#editMood").value;
+      const notes = document.querySelector("#editNotes").value;
+      const nodes = document.querySelector("#editDiv").querySelectorAll(".emotion");
+      const feelings = Array.from(nodes).filter((node) => node.checked);
+      const now = DateUtil.getDate();
+      const data = {};
+      
+      data.id = now.getTime();
+      data.date = now;
+      data.mood = parseInt(mood, 10);
+      data.notes = notes;
+      data.feelings = feelings.map((node) => node.getAttribute("data-name")); 
+      
+      // Have to use a function in this scope.
+      VFS.updateDiary(data, () => {
+        this.init();
+        this.clearHistoryEntry();
+      });
     });
     
     document.querySelector("#cancel").addEventListener("click", () => {
-      // Clear inut controls.
       this.clearHistoryEntry();
-      // Return to dashboard.
+      this.showDefaultDashboard();
     });
 
     // Add event handlers.
