@@ -12,7 +12,7 @@
   "private": true,
   "dependencies": {
     "jquery": "jquery/jquery",
-    "bootstrap": "twbs/bootstrap",
+    "bootstrap": "twbs/bootstrap#^3.3.6",
     "polymer": "Polymer/polymer#^1.4.0",
     "platform": "Polymer/platform#^0.4.2"
   }
