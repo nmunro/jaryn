@@ -23,13 +23,10 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="navLink active"><a id="dashboard" data-target="dashboardDiv" href="#">Dashboard<span class="sr-only">(current)</span></a></li>
-            <li class="navLink"><a id="help" data-target="addDiv" href="#">Add Record</a></li>
-            <li class="navLink"><a id="history" data-target="historyDiv" href="#">History</a></li>
-            <li class="navLink"><a id="about" data-target="aboutDiv" href="#">About</a></li>
-            
-            <!-- These are invisible on purpose -->
-            <li class="navLink invisible"><a id="edit" data-target="editDiv" href="#">About</a></li>
+            <li class="navLink active"><a id="dashboardNav" data-target="dashboardDiv" href="#">Dashboard<span class="sr-only">(current)</span></a></li>
+            <li class="navLink"><a id="editNav" data-target="editDiv" href="#">Add/Edit Record</a></li>
+            <li class="navLink"><a id="historyNav" data-target="historyDiv" href="#">History</a></li>
+            <li class="navLink"><a id="aboutNav" data-target="aboutDiv" href="#">About</a></li>
           </ul>
         </div>
         
@@ -53,8 +50,8 @@
         <div id="editDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
           <h1 class="page-header">Edit Record:&nbsp;<span id="editDate"></span></h1>
           <div class="row">
-            <label for="editMood">Mood:&nbsp;<span id="editMoodValue"></span></label>
-            <input id="editMood" name="editMood" type="range" min="1" max="10" step="1" value="5"></input>
+            <label for="mood">Mood:&nbsp;<span id="moodValue"></span></label>
+            <input id="mood" name="mood" type="range" min="1" max="10" step="1" value="5"></input>
           </div>
           <div class="row">
             <div class="row">
@@ -113,88 +110,15 @@
           
           <div class="row">
             <label>Notes:</label>
-            <textarea id="editNotes" class="notes"></textarea>
+            <textarea id="notes" rows="5"></textarea>
             <br/>
           </div> 
           
           <div class="row">
             <div class="btn-group" role="group" aria-label="button group">
-              <button id="resave" class="btn btn-primary">Save</button>
-              <button id="cancel" class="btn btn-danger">Cancel</button>
+              <button id="saveRecord" class="btn btn-success">Save</button>
+              <button id="cancelRecord" class="btn btn-danger">Cancel</button>
             </div>
-          </div>
-        </div>
-        
-        <div id="addDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
-          <h1 class="page-header">Add Record</h1>
-          <div class="row">
-            <label for="addMood">Mood:&nbsp;<span id="addMoodValue"></span></label>
-            <input id="addMood" name="addMood" type="range" min="1" max="10" step="1" value="5"></input>
-          </div>
-          
-          <div class="row">
-            <div class="row">
-              <label>Feelings:&nbsp;</label>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-3 col-xs-3">
-                <input data-name="positive" class="emotion" type="checkbox">Positive</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input data-name="alert" class="emotion" type="checkbox">Alert</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input data-name="bored" class="emotion" type="checkbox">Bored</input>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-3 col-xs-3">
-                <input data-name="confident" class="emotion" type="checkbox">Confident</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input data-name="frustrated" class="emotion" type="checkbox">Frustrated</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input data-name="relaxed" class="emotion" type="checkbox">Relaxed</input>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-3 col-xs-3">
-                <input data-name="ok/fine" class="emotion" type="checkbox">Ok/Fine</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input data-name="angry" class="emotion" type="checkbox">Angry</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input data-name="happy" class="emotion" type="checkbox">Happy</input>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-3 col-xs-3">
-                <input data-name="sad" class="emotion" type="checkbox">Sad</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input data-name="stressed" class="emotion" type="checkbox">Stressed</input>
-              </div>
-              <div class="col-md-3 col-xs-3">
-                <input data-name="tired" class="emotion" type="checkbox">Tired</input>
-              </div>
-            </div>
-            <br/> 
-          </div>
-          
-          <div class="row">
-            <label>Notes:</label>
-            <textarea id="addNotes" class="notes"></textarea>
-            <br/>
-          </div> 
-          
-          <div class="row">
-            <button id="save" class="btn btn-primary">Save</button>
           </div>
         </div>
         

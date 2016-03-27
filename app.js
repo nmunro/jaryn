@@ -32,7 +32,7 @@ const App = Object.freeze(Object.create({
     this.hideDivAll();
     this.hideNavAll();
     this.showDiv(document.querySelector("#dashboardDiv"));
-    this.showNav(document.querySelector("#dashboard").parentNode);
+    this.showNav(document.querySelector("#dashboardNav").parentNode);
   },
   
   "setDate": function() {
@@ -44,7 +44,7 @@ const App = Object.freeze(Object.create({
   },
   
   "setMoodValue": function(value) {
-    document.querySelector('#addMoodValue').innerHTML = value;
+    document.querySelector('#moodValue').innerHTML = value;
   },
   
   "setSevenDayAverageMood": function(val) {
@@ -54,40 +54,16 @@ const App = Object.freeze(Object.create({
   
   "clearHistoryEntry": function() {
     Array.from(document.querySelectorAll(".emotion")).forEach((e) => e.checked = false);    
-    document.querySelector("#editNotes").innerHTML = "";
-    document.querySelector("#editMood").value = "0";
-    document.querySelector("#editMoodValue").innerHTML = "0%";
-    document.querySelector("#addNotes").innerHTML = "";
-    document.querySelector("#addMood").value = "0";
-    document.querySelector("#addMoodValue").innerHTML = "0%";
+    document.querySelector("#notes").innerHTML = "";
+    document.querySelector("#mood").value = "0";
+    document.querySelector("#moodValue").innerHTML = "0%";
   },
   
   "setupEventHandlers": function() {
      // Save button event handler.
-    document.querySelector("#save").addEventListener("click", () => {
-      const mood = document.querySelector("#addMood").value;
-      const notes = document.querySelector("#addNotes").value;
-      const nodes = document.querySelector("#addDiv").querySelectorAll(".emotion");
-      const feelings = Array.from(nodes).filter((node) => node.checked);
-      const now = DateUtil.getDate();
-      const data = {};
-      
-      data.id = now.getTime();
-      data.date = now;
-      data.mood = parseInt(mood, 10);
-      data.notes = notes;
-      data.feelings = feelings.map((node) => node.getAttribute("data-name")); 
-      
-      // Have to use a function in this scope.
-      VFS.updateDiary(data, () => {
-        this.init();
-        this.clearHistoryEntry();
-      });
-    });
-    
-    document.querySelector("#resave").addEventListener("click", () => {
-      const mood = document.querySelector("#editMood").value;
-      const notes = document.querySelector("#editNotes").value;
+    document.querySelector("#saveRecord").addEventListener("click", () => {
+      const mood = document.querySelector("#mood").value;
+      const notes = document.querySelector("#notes").value;
       const nodes = document.querySelector("#editDiv").querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
       const now = DateUtil.getDate();
@@ -106,14 +82,14 @@ const App = Object.freeze(Object.create({
       });
     });
     
-    document.querySelector("#cancel").addEventListener("click", () => {
+    document.querySelector("#cancelRecord").addEventListener("click", () => {
       this.clearHistoryEntry();
       this.showDefaultDashboard();
     });
 
     // Add event handlers.
-    document.querySelector("#addMood").addEventListener('change', (event) => {
-      this.setMoodValue(event.target.value);
+    document.querySelector("#mood").addEventListener('change', (event) => {
+      this.setMoodValue(`${event.target.value}0%`);
     });
 
     Array.from(document.querySelectorAll(".navLink")).forEach((nav) => {
@@ -131,24 +107,24 @@ const App = Object.freeze(Object.create({
   
   "editHistory": function(event) {
     const row = event.target.parentNode;
-    const cells = Array.from(row.getElementsByTagName("td"));
-    const es = Array.from(document.querySelector("#editDiv").querySelectorAll(".emotion"));
+    const cells = Array.from(row.querySelectorAll("td"));
+    const es = Array.from(document.querySelectorAll(".emotion"));
     
     this.hideDivAll();
+    this.hideNavAll();
     this.showDiv(document.querySelector("#editDiv"));
+    this.showNav(document.querySelector("#editNav").parentNode);
     
     cells.forEach((cell) => {
       switch(cell.getAttribute("data-name")) {
         case "date":
-          document.getElementById("editDate").innerHTML = cell.innerHTML;
+          document.querySelector("#editDate").innerHTML = cell.innerHTML;
           break;   
           
         case "mood": 
-          document.getElementById("editMoodValue").innerHTML = cell.innerHTML;
-          document.getElementById("editMood").value = cell.innerHTML[0];
-          if(cell.innerHTML === "100%") {
-            document.getElementById("editMood").value += "0";
-          }
+          document.querySelector("#moodValue").innerHTML = cell.innerHTML;
+          document.querySelector("#mood").value = cell.innerHTML[0];
+          if(cell.innerHTML === "100%") document.querySelector("#mood").value += "0";
           break;
           
         case "feelings":
@@ -161,7 +137,7 @@ const App = Object.freeze(Object.create({
           break;
           
         case "notes":
-          document.getElementById("editNotes").innerHTML = cell.innerHTML;
+          document.querySelector("#notes").innerHTML = cell.innerHTML;
           break;
       }
     });
@@ -225,7 +201,7 @@ const App = Object.freeze(Object.create({
     this.hideDivAll();
     this.hideNavAll();
     this.showDiv(document.querySelector("#dashboardDiv"));
-    this.showNav(document.querySelector("#dashboard").parentNode);
+    this.showNav(document.querySelector("#dashboardNav").parentNode);
     
     VFS.loadConfig((conf) => {
       VFS.getSevenDayHistory((d) => this.showHistory(d));

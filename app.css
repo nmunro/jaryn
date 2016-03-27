@@ -2,16 +2,16 @@
   display: none;
 }
 
-.notes {
+#notes {
   height: 100%;
   width: 100%;
 }
 
-#save, .btn-group {
+.btn-group {
   width: 100%;
 }
 
-#resave, #cancel {
+#saveRecord, #cancelRecord {
   width: 50%;
 }
 
