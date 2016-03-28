@@ -147,30 +147,23 @@ const App = Object.freeze(Object.create({
     const moodObj = [];
     const tbody = document.querySelector("#historyTable");
     
+    
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
-    Object.keys(data).forEach((obj) => {
+    data.forEach((obj) => {
       const row = document.createElement('tr');
       const date = document.createElement('td');
       const mood = document.createElement('td');
       const feelings = document.createElement('td');
       const notes = document.createElement('td');
-      const dt = new Date(parseInt(obj, 10));
+      const dt = new Date(obj.date);
       const fn = (p, n) => `${p}, ${n}`;
       
-      if(!data[obj]) {
-        data[obj] = {
-          "mood": 0,
-          "feelings": ["-"],
-          "notes": "-"
-        };   
-      }
+      moodObj.push(obj.mood);
       
-      moodObj.push(data[obj].mood);
-      
-      mood.innerHTML = `${(data[obj].mood*10)}%`;
-      feelings.innerHTML = data[obj].feelings.reduce(fn);
-      notes.innerHTML = (data[obj].notes !== "") ? data[obj].notes : "-";
+      mood.innerHTML = `${obj.mood*10}%`;
+      feelings.innerHTML = obj.feelings.reduce(fn);
+      notes.innerHTML = (obj.notes !== "") ? obj.notes : "-";
       date.innerHTML = `${dt.getDate()}/`;
       date.innerHTML += `${DateUtil.zeroPad(dt.getMonth()+1)}/`;
       date.innerHTML += `${dt.getFullYear()}`;

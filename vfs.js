@@ -48,6 +48,8 @@ const writeJSON = (obj) => {
 };
 
 const VFS = Object.freeze(Object.create({
+  "readJSON": readJSON,
+  "writeJSON": writeJSON,
   /**
    * loadConfig loads a config object from the config file and passes the 
    * config into the callback.
@@ -85,6 +87,7 @@ const VFS = Object.freeze(Object.create({
    * loadHistory reads the current months history file and passes the data
    * into the provided callback function.
    * 
+   * @param String fn File name to open.
    * @param function cb Callback to execute once history has been loaded.
    */
   "loadHistory": function(fn, cb) {
@@ -101,33 +104,30 @@ const VFS = Object.freeze(Object.create({
    * 
    * @param function cb The callback function to execute.
    */
-  "getSevenDayHistory": function(cb) {
-    // Get all the keys we want to get.
-    const obj = [];
-    const files = new Set();
-    
-    // Get last 7 dates.
-    const dates = Array.of(0, 1, 2, 3, 4, 5, 6).map((num) => {
+   "getSevenDayHistory": function(cb) {
+     const obj = [];  
+     const files = new Set();
+     
+     // Get list of files, at most there will only ever be two.
+    Array.of(0, 1, 2, 3, 4, 5, 6).forEach((num) => {
       const now = DateUtil.getDate();
       const dayOffset = ((1000*60)*60)*24;
-      
-      // Get the file(s) these dates exist in.
-      files.add(`${now.getFullYear()}-${DateUtil.zeroPad(now.getMonth()+1)}`);
-      
-      now.setTime(now-(dayOffset*num));
-      return now.getTime();
+      files.add(`${now.getFullYear()}-${DateUtil.zeroPad(now.getMonth()+1)}.json`);
     });
     
-    // Read the last 7 dates into memory.
-    [...files].forEach((fn, count, arr) => {
-      // Add .json suffix.
-      this.loadHistory(`${fn}.json`, (data) => {
-        dates.forEach((date) => obj[date] = data[date]);
-        if (count === arr.length-1) cb(obj);
+    files.forEach((fn) => {
+      this.loadHistory(fn, (data) => {
+        const today = DateUtil.getDate();
+        const days = data.slice(data.length-7, data.length).reverse();
+        
+        days.forEach((d, count, arr) => {
+          obj.push(d);
+          if(count === arr.length-1) cb(obj);
+        });
       });
     });
-  },
-  
+   },
+   
   /**
    * getThisMonthsJSON parses the month and year and reads the JSON from
    * this months <month>-<year>.json file.
@@ -150,7 +150,7 @@ const VFS = Object.freeze(Object.create({
   "updateDiary": function(day, cb) {
     const fn = this.getThisMonthsJSON();
     const writeData = (data) => {
-      data[day.id] = day;
+      data.push(day);
       writeJSON({
         "fileName": fn,
         "permissions": { "create": true },

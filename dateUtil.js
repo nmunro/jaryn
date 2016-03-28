@@ -4,7 +4,10 @@ const DateUtil = Object.freeze(Object.create({
    */
   "getYYYYMMDD": function(offset) {
     const date = new Date();
+    const tzOffset = date.getTimezoneOffset();
+    
     if(offset) date.setDate(date.getDate()-offset);
+    
     return {
       "year": "" + date.getFullYear(),
       "month": "" + this.zeroPad(date.getMonth()+1),
@@ -12,6 +15,9 @@ const DateUtil = Object.freeze(Object.create({
     };
   },
   
+  /**
+   * If a value is in the single digits then it's prefixed with a zero.
+   */
   "zeroPad": function(date) {
     return (date < 10) ? "0" + date : date;  
   },
