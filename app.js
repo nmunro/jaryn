@@ -63,6 +63,9 @@ const App = Object.freeze(Object.create({
         if(c1 === a1.length-1 && c2 === a2.length-1) {
           const total = Object.keys(obj).map((elm) => obj[elm]).reduce((p, n) => p + n.count, 0);
           const emotions = document.querySelector("#averageEmotions");
+          const exercise = document.querySelector("#exercise");
+          
+          emotions.innerHTML = "";
           Object.keys(obj).map((emotion) => {
             const percent = Math.round((obj[emotion].count / total) * 100);
             obj[emotion].percent = percent;
@@ -87,13 +90,15 @@ const App = Object.freeze(Object.create({
       const notes = document.querySelector("#notes").value;
       const nodes = document.querySelector("#editDiv").querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
+      const exercise = document.querySelector("#exercise").checked;
       const now = DateUtil.getDate();
       const data = {
         "id": now.getTime(),
         "date": now,
         "mood": parseInt(mood, 10),
         "notes": notes,
-        "feelings": feelings.map((node) => node.getAttribute("data-name"))
+        "feelings": feelings.map((node) => node.getAttribute("data-name")),
+        "exercise": exercise
       };
       
       // Have to use a function in this scope.
@@ -178,6 +183,7 @@ const App = Object.freeze(Object.create({
       const mood = document.createElement('td');
       const feelings = document.createElement('td');
       const notes = document.createElement('td');
+      const exercise = document.createElement('td');
       const dt = new Date(obj.date);
       const fn = (p, n) => `${p}, ${n}`;
       
@@ -190,16 +196,19 @@ const App = Object.freeze(Object.create({
       date.innerHTML = `${dt.getDate()}/`;
       date.innerHTML += `${DateUtil.zeroPad(dt.getMonth()+1)}/`;
       date.innerHTML += `${dt.getFullYear()}`;
+      exercise.innerHTML = obj.exercise ? "Yes" : "No";
       
       date.setAttribute("data-name", "date");
       mood.setAttribute("data-name", "mood");
       feelings.setAttribute("data-name", "feelings");
       notes.setAttribute("data-name", "notes");
+      exercise.setAttribute("data-name", "exercise");
 
       row.appendChild(date);
       row.appendChild(mood);
       row.appendChild(feelings);
       row.appendChild(notes);
+      row.appendChild(exercise);
       tbody.appendChild(row);
       
       // Add event handler for the row.
