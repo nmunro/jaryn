@@ -1,25 +1,26 @@
 const DateUtil = Object.freeze(Object.create({
   /**
    * Use this function for display purposes only.
+   * @param Number offset Number of days to deduct from the current timestamp.
    */
   "getYYYYMMDD": function(offset) {
     const date = new Date();
-    const tzOffset = date.getTimezoneOffset();
     
     if(offset) date.setDate(date.getDate()-offset);
     
     return {
-      "year": "" + date.getFullYear(),
-      "month": "" + this.zeroPad(date.getMonth()+1),
-      "day": "" + this.zeroPad(date.getDate())
+      "year": `${date.getFullYear()}`,
+      "month": `${this.zeroPad(date.getMonth()+1)}`,
+      "day": `${this.zeroPad(date.getDate())}`
     };
   },
   
   /**
    * If a value is in the single digits then it's prefixed with a zero.
+   * @param Number num Number to prepend with 0 if < 10.
    */
-  "zeroPad": function(date) {
-    return (date < 10) ? "0" + date : date;  
+  "zeroPad": function(num) {
+    return (num < 10) ? `0${num}` : num;  
   },
   
   /**
