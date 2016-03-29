@@ -15,7 +15,6 @@
   width: 50%;
 }
 
-#moodMeter {
+.averageMeter { 
   width: 100%;
 }
-

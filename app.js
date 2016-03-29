@@ -52,6 +52,27 @@ const App = Object.freeze(Object.create({
     document.querySelector("#moodMeterLbl").innerHTML = `${Math.floor(val*10)}%`;
   },
   
+  "setSevenDayAverageEmotions": function(emotions) {
+    const obj = {};
+    emotions.forEach((day, c1, a1) => {
+      day.forEach((emotion, c2, a2) => {
+        if(obj[emotion] === undefined) obj[emotion] = { "count": 1, "percent": 0 };
+        else obj[emotion].count++;
+        
+        // This is the end of both inner and outer loops.
+        if(c1 === a1.length-1 && c2 === a2.length-1) {
+          const total = Object.keys(obj).map((elm) => obj[elm]).reduce((p, n) => p + n.count, 0);
+          const emotions = document.querySelector("#averageEmotions");
+          Object.keys(obj).map((emotion) => {
+            const percent = Math.round((obj[emotion].count / total) * 100);
+            obj[emotion].percent = percent;
+            emotions.innerHTML += `${emotion}: ${percent}%&nbsp;|&nbsp;`;  
+          });
+        }
+      });
+    });
+  },
+  
   "clearHistoryEntry": function() {
     Array.from(document.querySelectorAll(".emotion")).forEach((e) => e.checked = false);    
     document.querySelector("#notes").innerHTML = "";
@@ -67,13 +88,13 @@ const App = Object.freeze(Object.create({
       const nodes = document.querySelector("#editDiv").querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
       const now = DateUtil.getDate();
-      const data = {};
-      
-      data.id = now.getTime();
-      data.date = now;
-      data.mood = parseInt(mood, 10);
-      data.notes = notes;
-      data.feelings = feelings.map((node) => node.getAttribute("data-name")); 
+      const data = {
+        "id": now.getTime(),
+        "date": now,
+        "mood": parseInt(mood, 10),
+        "notes": notes,
+        "feelings": feelings.map((node) => node.getAttribute("data-name"))
+      };
       
       // Have to use a function in this scope.
       VFS.updateDiary(data, () => {
@@ -145,6 +166,7 @@ const App = Object.freeze(Object.create({
   
   "showHistory": function(data) {
     const moodObj = [];
+    const emotionObj = [];
     const tbody = document.querySelector("#historyTable");
     
     
@@ -160,6 +182,7 @@ const App = Object.freeze(Object.create({
       const fn = (p, n) => `${p}, ${n}`;
       
       moodObj.push(obj.mood);
+      emotionObj.push(obj.feelings);
       
       mood.innerHTML = `${obj.mood*10}%`;
       feelings.innerHTML = obj.feelings.reduce(fn);
@@ -186,6 +209,7 @@ const App = Object.freeze(Object.create({
     // Bail out if there's no data.
     if(moodObj.length === 0) return;
     this.setSevenDayAverageMood(moodObj.reduce((p, n) => p+n) / moodObj.length);
+    this.setSevenDayAverageEmotions(emotionObj);
   },
   
   "init": function() {
@@ -196,9 +220,7 @@ const App = Object.freeze(Object.create({
     this.showDiv(document.querySelector("#dashboardDiv"));
     this.showNav(document.querySelector("#dashboardNav").parentNode);
     
-    VFS.loadConfig((conf) => {
-      VFS.getSevenDayHistory((d) => this.showHistory(d));
-    });
+    VFS.loadConfig((conf) => VFS.getSevenDayHistory((d) => this.showHistory(d)));
   } 
 }));
 

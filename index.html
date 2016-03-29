@@ -33,7 +33,9 @@
         <div id="dashboardDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Dashboard:&nbsp;<span id="date"></span></h1>
           <h4>Mood level:&nbsp;<span id="moodMeterLbl">0%</span></h4>
-          <meter id="moodMeter" min="1" max="100" value="50">50%</meter>
+          <meter id="moodMeter" class="averageMeter" min="1" max="100" value="50">50%</meter>
+          <h4>Average Emotions:</h4>
+          <div id="averageEmotions"></div>
           <table class="table table-striped">
             <thead>
                <tr>
