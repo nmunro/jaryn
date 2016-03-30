@@ -106,6 +106,8 @@ const VFS = Object.freeze(Object.create({
    */
    "getSevenDayHistory": function(cb) {
      const obj = [];  
+     const today = DateUtil.getDate();
+     const limit = today.getDate()-6;
      const files = new Set();
      
      // Get list of files, at most there will only ever be two.
@@ -117,12 +119,18 @@ const VFS = Object.freeze(Object.create({
     
     files.forEach((fn) => {
       this.loadHistory(fn, (data) => {
-        const today = DateUtil.getDate();
-        const days = data.slice(data.length-7, data.length).reverse();
+        const days = Object.keys(data).reverse().filter((day) => day >= limit);
+        
+        obj[`${today.getDate()}`] = {
+          "date": today,
+          "notes": "-",
+          "feelings": [],
+          "exercise": false
+        };
         
         days.forEach((d, count, arr) => {
-          obj.push(d);
-          if(count === arr.length-1) cb(obj);
+          obj[d] = data[d];
+          if(count === arr.length-1) cb(obj.reverse());
         });
       });
     });
@@ -150,7 +158,7 @@ const VFS = Object.freeze(Object.create({
   "updateDiary": function(day, cb) {
     const fn = this.getThisMonthsJSON();
     const writeData = (data) => {
-      data.push(day);
+      data[day.date.getDate()] = day;
       writeJSON({
         "fileName": fn,
         "permissions": { "create": true },

@@ -33,5 +33,13 @@ const DateUtil = Object.freeze(Object.create({
     date.setSeconds(0);
     date.setMilliseconds(0);
     return date;
+  },
+  
+  "parse": function(obj) {
+    const date = new Date(0);  
+    date.setYear(obj.year);
+    date.setMonth(parseInt(obj.month-1, 10));
+    date.setDate(obj.day);
+    return date;
   }
 }));

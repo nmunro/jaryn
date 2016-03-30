@@ -77,21 +77,25 @@ const App = Object.freeze(Object.create({
   },
   
   "clearHistoryEntry": function() {
+    const {year, month, day} = DateUtil.getYYYYMMDD();
     Array.from(document.querySelectorAll(".emotion")).forEach((e) => e.checked = false);    
+    document.querySelector("#exercise").checked = false;
     document.querySelector("#notes").innerHTML = "";
     document.querySelector("#mood").value = "0";
     document.querySelector("#moodValue").innerHTML = "0%";
+    document.querySelector("#editDate").innerHTML = `${day}/${month}/${year}`;
   },
   
   "setupEventHandlers": function() {
      // Save button event handler.
     document.querySelector("#saveRecord").addEventListener("click", () => {
+      const [day, month, year] = document.querySelector("#editDate").innerHTML.split("/");
       const mood = document.querySelector("#mood").value;
       const notes = document.querySelector("#notes").value;
       const nodes = document.querySelector("#editDiv").querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
       const exercise = document.querySelector("#exercise").checked;
-      const now = DateUtil.getDate();
+      const now = DateUtil.parse({"year": year, "month": month, "day": day});
       const data = {
         "id": now.getTime(),
         "date": now,
@@ -165,6 +169,10 @@ const App = Object.freeze(Object.create({
         case "notes":
           document.querySelector("#notes").innerHTML = cell.innerHTML;
           break;
+          
+        case "exercise":
+          document.querySelector("#exercise").checked = cell.innerHTML === "Yes";
+          break;
       }
     });
   },
@@ -173,7 +181,6 @@ const App = Object.freeze(Object.create({
     const moodObj = [];
     const emotionObj = [];
     const tbody = document.querySelector("#historyTable");
-    
     
     while(tbody.hasChildNodes()) tbody.removeChild(tbody.firstChild);
     
@@ -187,11 +194,11 @@ const App = Object.freeze(Object.create({
       const dt = new Date(obj.date);
       const fn = (p, n) => `${p}, ${n}`;
       
-      moodObj.push(obj.mood);
+      moodObj.push(obj.mood || 0);
       emotionObj.push(obj.feelings);
       
-      mood.innerHTML = `${obj.mood*10}%`;
-      feelings.innerHTML = obj.feelings.reduce(fn);
+      mood.innerHTML = `${obj.mood*10 || 0}%`;
+      feelings.innerHTML = obj.feelings.length > 0 ? obj.feelings.reduce(fn) : "-";
       notes.innerHTML = (obj.notes !== "") ? obj.notes : "-";
       date.innerHTML = `${dt.getDate()}/`;
       date.innerHTML += `${DateUtil.zeroPad(dt.getMonth()+1)}/`;
