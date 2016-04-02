@@ -89,20 +89,14 @@ const App = Object.freeze(Object.create({
   "setupEventHandlers": function() {
      // Save button event handler.
     document.querySelector("#saveRecord").addEventListener("click", () => {
-      const [day, month, year] = document.querySelector("#editDate").innerHTML.split("/");
-      const mood = document.querySelector("#mood").value;
-      const notes = document.querySelector("#notes").value;
-      const nodes = document.querySelector("#editDiv").querySelectorAll(".emotion");
+      const nodes = document.querySelectorAll(".emotion");
       const feelings = Array.from(nodes).filter((node) => node.checked);
-      const exercise = document.querySelector("#exercise").checked;
-      const now = DateUtil.parse({"year": year, "month": month, "day": day});
       const data = {
-        "id": now.getTime(),
-        "date": now,
-        "mood": parseInt(mood, 10),
-        "notes": notes,
-        "feelings": feelings.map((node) => node.getAttribute("data-name")),
-        "exercise": exercise
+        "date": document.querySelector("#editDate").innerHTML.split("/").reverse().join("-"),
+        "mood": parseInt(document.querySelector("#mood").value, 10),
+        "notes": document.querySelector("#notes").value,
+        "exercise": document.querySelector("#exercise").checked,
+        "feelings": feelings.map((node) => node.getAttribute("data-name"))
       };
       
       // Have to use a function in this scope.
@@ -191,7 +185,7 @@ const App = Object.freeze(Object.create({
       const feelings = document.createElement('td');
       const notes = document.createElement('td');
       const exercise = document.createElement('td');
-      const dt = new Date(obj.date);
+      const [year, month, day] = obj.date.split("-");
       const fn = (p, n) => `${p}, ${n}`;
       
       moodObj.push(obj.mood || 0);
@@ -200,9 +194,7 @@ const App = Object.freeze(Object.create({
       mood.innerHTML = `${obj.mood*10 || 0}%`;
       feelings.innerHTML = obj.feelings.length > 0 ? obj.feelings.reduce(fn) : "-";
       notes.innerHTML = (obj.notes !== "") ? obj.notes : "-";
-      date.innerHTML = `${dt.getDate()}/`;
-      date.innerHTML += `${DateUtil.zeroPad(dt.getMonth()+1)}/`;
-      date.innerHTML += `${dt.getFullYear()}`;
+      date.innerHTML = `${day}/${month}/${year}`;
       exercise.innerHTML = obj.exercise ? "Yes" : "No";
       
       date.setAttribute("data-name", "date");

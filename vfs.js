@@ -16,7 +16,10 @@ const readJSON = (obj) => {
       (fileEntry) => {
         fileEntry.file((file) => {
           const fr = new FileReader();
-          fr.onload = (e) => obj.onSuccess(JSON.parse(fr.result));
+          fr.onload = (e) => {
+            if(fr.result === null || fr.result === "") obj.onSuccess({});
+            else obj.onSuccess(JSON.parse(fr.result));
+          };
           fr.readAsText(file);
         });  
       }, obj.onFailure);    
@@ -107,47 +110,47 @@ const VFS = Object.freeze(Object.create({
    "getSevenDayHistory": function(cb) {
      const obj = [];  
      const today = DateUtil.getDate();
-     const limit = today.getDate()-6;
-     const files = new Set();
+     const entries = {};
+     let offset = 0;
      
-     // Get list of files, at most there will only ever be two.
-    Array.of(0, 1, 2, 3, 4, 5, 6).forEach((num) => {
-      const now = DateUtil.getDate();
-      const dayOffset = ((1000*60)*60)*24;
-      files.add(`${now.getFullYear()}-${DateUtil.zeroPad(now.getMonth()+1)}.json`);
+     // Get list of files, at most there will only ever be two and the number
+     // of entries to read from the file.
+    [0, 1, 2, 3, 4, 5, 6].forEach((num) => {
+      const now = DateUtil.getYYYYMMDD(num);
+      const fn = `${now.year}-${now.month}.json`;
+      
+      entries[fn] = entries[fn] === undefined ? 1 : entries[fn] += 1;
     });
     
-    files.forEach((fn) => {
-      this.loadHistory(fn, (data) => {
-        const days = Object.keys(data).reverse().filter((day) => day >= limit);
-        
-        obj[`${today.getDate()}`] = {
-          "date": today,
-          "notes": "-",
-          "feelings": [],
-          "exercise": false
-        };
-        
-        days.forEach((d, count, arr) => {
-          obj[d] = data[d];
-          if(count === arr.length-1) cb(obj.reverse());
+    Object.keys(entries).forEach((entry) => {
+      this.loadHistory(entry, (data) => {
+        Array(entries[entry]).fill(0).forEach((o, count, arr) => {
+          const date = new Date(today.getTime());
+          let tmpDate;
+          let entry;
+          
+          date.setDate(date.getDate()-offset);
+          tmpDate = DateUtil.getYYYYMMDD(offset);
+          offset++;
+          
+          if(data[tmpDate.day] === undefined || Object.isEmpty(data)) {
+            obj.push({
+              "date": `${tmpDate.year}-${tmpDate.month}-${tmpDate.day}`,
+              "notes": "-",
+              "feelings": [],
+              "exercise": false
+            });
+          }
+          else {
+            obj.push(data[tmpDate.day]);   
+          }
+          
+          if(count === arr.length-1) cb(obj);
         });
       });
     });
    },
-   
-  /**
-   * getThisMonthsJSON parses the month and year and reads the JSON from
-   * this months <month>-<year>.json file.
-   * The supplied callback is then passed the data and executed.
-   * 
-   * @param function cb Callback to execute when name generated.
-   */
-  "getThisMonthsJSON": function(cb) {
-    const {year, month} = DateUtil.getYYYYMMDD();
-    return `${year}-${month}.json`;
-  },
-  
+
   /**
    * updateDiary takes a single entry and saves it to the current months 
    * history file.
@@ -155,10 +158,11 @@ const VFS = Object.freeze(Object.create({
    * @param Object day The data for the day.
    * @param function cb the Callback function to execute.
    */
-  "updateDiary": function(day, cb) {
-    const fn = this.getThisMonthsJSON();
+  "updateDiary": function(obj, cb) {
+    const [year, month, day] = obj.date.split("-");
+    const fn = `${year}-${month}.json`;
     const writeData = (data) => {
-      data[day.date.getDate()] = day;
+      data[day] = obj;
       writeJSON({
         "fileName": fn,
         "permissions": { "create": true },
