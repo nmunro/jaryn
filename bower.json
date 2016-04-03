@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "jquery": "jquery/jquery#^2.2.2",
-    "bootstrap": "twbs/bootstrap#^3.3.6"
+    "bootstrap": "twbs/bootstrap#^3.3.6",
+    "polyfills.js": "https://github.com/nmunro/polyfills.js.git"
   }
 }
