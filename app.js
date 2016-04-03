@@ -87,13 +87,14 @@ const App = Object.freeze(Object.create({
   },
 
   "setupEventHandlers": function() {
-    $('.tab-nav a').click(function (e) {
-      console.log(this);
-      e.preventDefault()
-      $(this).tab('show');
-    });
-
+    // Gah jQuery, impure! Impure!
     $('.tab-nav a:first').tab('show');
+    Array.from(document.querySelectorAll(".tab-nav a")).forEach((node) => {
+      node.addEventListener("click", (e) => {
+        e.preventDefault();
+        $(e.target).tab('show');
+      });  
+    });
 
      // Save button event handler.
     document.querySelector("#saveRecord").addEventListener("click", () => {
