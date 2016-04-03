@@ -29,7 +29,7 @@
             <li class="navLink"><a id="aboutNav" data-target="aboutDiv" href="#">About</a></li>
           </ul>
         </div>
-        
+
         <div id="dashboardDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Dashboard:&nbsp;<span id="date"></span></h1>
           <h4>Mood level:&nbsp;<span id="moodMeterLbl">0%</span></h4>
@@ -44,12 +44,12 @@
                 <th>Feelings</th>
                 <th>Notes</th>
                 <th>Exercised</th>
-              </tr> 
+              </tr>
             </thead>
-            <tbody id="historyTable"></tbody> 
+            <tbody id="historyTable"></tbody>
           </table>
         </div>
-        
+
         <div id="editDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
           <h1 class="page-header">Edit Record:&nbsp;<span id="editDate"></span></h1>
           <div class="row">
@@ -60,7 +60,7 @@
             <div class="row">
               <label>Feelings:&nbsp;</label>
             </div>
-            
+
             <div class="row">
               <div class="col-md-3 col-xs-3">
                 <input data-name="positive" class="emotion" type="checkbox">Positive</input>
@@ -72,7 +72,7 @@
                 <input data-name="bored" class="emotion" type="checkbox">Bored</input>
               </div>
             </div>
-            
+
             <div class="row">
               <div class="col-md-3 col-xs-3">
                 <input data-name="confident" class="emotion" type="checkbox">Confident</input>
@@ -84,7 +84,7 @@
                 <input data-name="relaxed" class="emotion" type="checkbox">Relaxed</input>
               </div>
             </div>
-            
+
             <div class="row">
               <div class="col-md-3 col-xs-3">
                 <input data-name="ok/fine" class="emotion" type="checkbox">Ok/Fine</input>
@@ -96,7 +96,7 @@
                 <input data-name="happy" class="emotion" type="checkbox">Happy</input>
               </div>
             </div>
-            
+
             <div class="row">
               <div class="col-md-3 col-xs-3">
                 <input data-name="sad" class="emotion" type="checkbox">Sad</input>
@@ -108,9 +108,9 @@
                 <input data-name="tired" class="emotion" type="checkbox">Tired</input>
               </div>
             </div>
-            <br/> 
+            <br/>
           </div>
-          
+
           <div class="row">
             <div class="row">
               <label>Exercise:&nbsp;</label>
@@ -120,13 +120,13 @@
                 <input id="exercise" data-name="exercise" type="checkbox">Exercised</input>
               </div>
           </div>
-          
+
           <div class="row">
             <label>Notes:</label>
             <textarea id="notes" rows="5"></textarea>
             <br/>
-          </div> 
-          
+          </div>
+
           <div class="row">
             <div class="btn-group" role="group" aria-label="button group">
               <button id="saveRecord" class="btn btn-success">Save</button>
@@ -134,18 +134,18 @@
             </div>
           </div>
         </div>
-        
+
         <div id="historyDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
           <h1 class="page-header">All History</h1>
           <h5>Not implemented yet.</h5>
         </div>
-        
+
         <div id="aboutDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
           <h1 class="page-header">About</h1>
           <div class="row">
-            <h3>Author: Neil Munro (neilmunro@gmail.com)</h3>  
+            <h3>Author: Neil Munro (neilmunro@gmail.com)</h3>
             <h3>
-              This program is licenced under the AGPL-3, the terms of which are distributed with this programs source code.  
+              This program is licenced under the AGPL-3, the terms of which are distributed with this programs source code.
             </h3>
           </div>
         </div>
@@ -154,7 +154,7 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="polyfills.js"></script>
+    <script src="bower_components/polyfills.js/Object.js"></script>
     <script src="dateUtil.js"></script>
     <script src="vfs.js"></script>
     <script src="app.js"></script>
