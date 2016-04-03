@@ -36,12 +36,19 @@
           <div id="tabs">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-              <li class="tab-nav active" role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab" aria-expanded="true">About</a></li>
-              <li class="tab-nav" role="presentation"><a href="#charts" aria-controls="charts" role="tab" data-toggle="tab">Reviews</a></li>
+              <li class="tab-nav" role="presentation"><a href="#charts" aria-controls="charts" role="tab" data-toggle="tab">Charts</a></li>
+              <li class="tab-nav active" role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab" aria-expanded="true">History</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
+              <div role="tabpanel" class="tab-pane" id="charts">
+                <h4>Mood level:&nbsp;<span id="moodMeterLbl">0%</span></h4>
+                <meter id="moodMeter" class="averageMeter" min="1" max="100" value="50">50%</meter>
+                <h4>Average Emotions:</h4>
+                <div id="averageEmotions"></div>
+              </div>
+              
               <div role="tabpanel" class="tab-pane active" id="history">
                 <table class="table table-striped">
                   <thead>
@@ -55,13 +62,6 @@
                   </thead>
                   <tbody id="historyTable"></tbody>
                 </table>
-              </div>
-
-              <div role="tabpanel" class="tab-pane" id="charts">
-                <h4>Mood level:&nbsp;<span id="moodMeterLbl">0%</span></h4>
-                <meter id="moodMeter" class="averageMeter" min="1" max="100" value="50">50%</meter>
-                <h4>Average Emotions:</h4>
-                <div id="averageEmotions"></div>
               </div>
             </div>
           </div>

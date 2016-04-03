@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "jquery": "jquery/jquery",
-    "bootstrap": "twbs/bootstrap"
+    "bootstrap": "twbs/bootstrap",
+    "doughnutIt": "https://github.com/JusCezari/doughnutIt"
   }
 }
