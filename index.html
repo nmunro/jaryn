@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard Template for Bootstrap</title>
+    <title>Jaryn</title>
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="app.css" rel="stylesheet">
     <link href="dashboard.css" rel="stylesheet">
@@ -32,22 +32,39 @@
 
         <div id="dashboardDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Dashboard:&nbsp;<span id="date"></span></h1>
-          <h4>Mood level:&nbsp;<span id="moodMeterLbl">0%</span></h4>
-          <meter id="moodMeter" class="averageMeter" min="1" max="100" value="50">50%</meter>
-          <h4>Average Emotions:</h4>
-          <div id="averageEmotions"></div>
-          <table class="table table-striped">
-            <thead>
-               <tr>
-                <th>Date</th>
-                <th>Mood</th>
-                <th>Feelings</th>
-                <th>Notes</th>
-                <th>Exercised</th>
-              </tr>
-            </thead>
-            <tbody id="historyTable"></tbody>
-          </table>
+
+          <div id="tabs">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="tab-nav active" role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab" aria-expanded="true">About</a></li>
+              <li class="tab-nav" role="presentation"><a href="#charts" aria-controls="charts" role="tab" data-toggle="tab">Reviews</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="history">
+                <table class="table table-striped">
+                  <thead>
+                     <tr>
+                      <th>Date</th>
+                      <th>Mood</th>
+                      <th>Feelings</th>
+                      <th>Notes</th>
+                      <th>Exercised</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTable"></tbody>
+                </table>
+              </div>
+
+              <div role="tabpanel" class="tab-pane" id="charts">
+                <h4>Mood level:&nbsp;<span id="moodMeterLbl">0%</span></h4>
+                <meter id="moodMeter" class="averageMeter" min="1" max="100" value="50">50%</meter>
+                <h4>Average Emotions:</h4>
+                <div id="averageEmotions"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div id="editDiv" class="contentDiv col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main invisible">
@@ -154,7 +171,6 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/polyfills.js/Object.js"></script>
     <script src="dateUtil.js"></script>
     <script src="vfs.js"></script>
     <script src="app.js"></script>
