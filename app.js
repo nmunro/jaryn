@@ -50,6 +50,7 @@ const App = Object.freeze(Object.create({
   "setSevenDayAverageMood": function(val) {
     document.querySelector("#moodMeter").value = val*10;
     document.querySelector("#moodMeterLbl").innerHTML = `${Math.floor(val*10)}%`;
+    App.drawMoodChart(Math.floor(val*10));
   },
 
   "setSevenDayAverageEmotions": function(emotions) {
@@ -73,6 +74,48 @@ const App = Object.freeze(Object.create({
           });
         }
       });
+    });
+    App.drawEmotionsChart();
+  },
+  
+  "drawEmotionsChart": function() {
+    const mood = 75;
+    const data = [
+      { "value": mood, "color": "green", "label": `${mood}%` },
+      { "value": 100-mood, "color": "red", "label": `${100-mood}%` }
+    ];
+    const moodCTX = document.querySelector("#emotionsChart").getContext("2d");  
+    const dn = new Chart(moodCTX).Doughnut(data, 
+    {
+      segmentShowStroke : true,
+      segmentStrokeColor : "#fff",
+      segmentStrokeWidth : 2,
+      percentageInnerCutout : 50, // This is 0 for Pie charts
+      animationSteps : 100,
+      animationEasing : "easeOutBounce",
+      animateRotate : true,
+      animateScale : false,
+      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    });  
+  },
+  
+  "drawMoodChart": function(mood) {
+    const data = [
+      { "value": mood, "color": "green", "label": `${mood}%` },
+      { "value": 100-mood, "color": "red", "label": `${100-mood}%` }
+    ];
+    const moodCTX = document.querySelector("#moodChart").getContext("2d");  
+    const dn = new Chart(moodCTX).Doughnut(data, 
+    {
+      segmentShowStroke : true,
+      segmentStrokeColor : "#fff",
+      segmentStrokeWidth : 2,
+      percentageInnerCutout : 50, // This is 0 for Pie charts
+      animationSteps : 100,
+      animationEasing : "easeOutBounce",
+      animateRotate : true,
+      animateScale : false,
+      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
     });
   },
 

@@ -18,3 +18,11 @@
 .averageMeter { 
   width: 100%;
 }
+
+#avgCharts {
+  width: 100%;
+}
+
+.avgChart {
+  width: 50%;
+}

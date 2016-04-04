@@ -47,6 +47,14 @@
                 <meter id="moodMeter" class="averageMeter" min="1" max="100" value="50">50%</meter>
                 <h4>Average Emotions:</h4>
                 <div id="averageEmotions"></div>
+                <div id="avgCharts" class="row">
+                  <div class="col-md-3 col-sm-3">
+                    <canvas id="moodChart" class="avgChart"></canvas>
+                  </div>
+                  <div class="col-md-3 col-sm-3">
+                    <canvas id="emotionsChart" class="avgChart"></canvas>
+                  </div>
+                </div>
               </div>
               
               <div role="tabpanel" class="tab-pane active" id="history">
@@ -171,6 +179,7 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/Chart.js/Chart.min.js"></script>
     <script src="dateUtil.js"></script>
     <script src="vfs.js"></script>
     <script src="app.js"></script>
