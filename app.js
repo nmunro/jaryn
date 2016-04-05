@@ -72,31 +72,17 @@ const App = Object.freeze(Object.create({
             obj[emotion].percent = percent;
             emotions.innerHTML += `${emotion}: ${percent}%&nbsp;|&nbsp;`;
           });
+          
+          App.drawEmotionsChart(obj);
         }
       });
     });
-    App.drawEmotionsChart();
   },
   
-  "drawEmotionsChart": function() {
-    const mood = 75;
-    const data = [
-      { "value": mood, "color": "green", "label": `${mood}%` },
-      { "value": 100-mood, "color": "red", "label": `${100-mood}%` }
-    ];
-    const moodCTX = document.querySelector("#emotionsChart").getContext("2d");  
-    const dn = new Chart(moodCTX).Doughnut(data, 
-    {
-      segmentShowStroke : true,
-      segmentStrokeColor : "#fff",
-      segmentStrokeWidth : 2,
-      percentageInnerCutout : 50, // This is 0 for Pie charts
-      animationSteps : 100,
-      animationEasing : "easeOutBounce",
-      animateRotate : true,
-      animateScale : false,
-      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-    });  
+  "drawEmotionsChart": function(emotions) {
+    const data = Object.keys(emotions).map((emotion) => { return { "value": emotions[emotion].percent }; });
+    const emotionsCTX = document.querySelector("#emotionsChart").getContext("2d");  
+    const dn = new Chart(emotionsCTX).Doughnut(data, {});  
   },
   
   "drawMoodChart": function(mood) {
@@ -105,18 +91,7 @@ const App = Object.freeze(Object.create({
       { "value": 100-mood, "color": "red", "label": `${100-mood}%` }
     ];
     const moodCTX = document.querySelector("#moodChart").getContext("2d");  
-    const dn = new Chart(moodCTX).Doughnut(data, 
-    {
-      segmentShowStroke : true,
-      segmentStrokeColor : "#fff",
-      segmentStrokeWidth : 2,
-      percentageInnerCutout : 50, // This is 0 for Pie charts
-      animationSteps : 100,
-      animationEasing : "easeOutBounce",
-      animateRotate : true,
-      animateScale : false,
-      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-    });
+    const dn = new Chart(moodCTX).Doughnut(data, {});
   },
 
   "clearHistoryEntry": function() {
@@ -174,7 +149,7 @@ const App = Object.freeze(Object.create({
 
         this.hideDivAll();
         this.hideNavAll();
-        this.showDiv(document.querySelector(`#${target}`));
+        this.showDiv(document.querySelector(target));
         this.showNav(event.target.parentNode);
         this.clearHistoryEntry();
       });
