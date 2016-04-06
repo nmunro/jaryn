@@ -43,15 +43,17 @@
             <!-- Tab panes -->
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane" id="charts">
-                <h4>Mood level:&nbsp;<span id="moodMeterLbl">0%</span></h4>
-                <meter id="moodMeter" class="averageMeter" min="1" max="100" value="50">50%</meter>
-                <h4>Average Emotions:</h4>
-                <div id="averageEmotions"></div>
                 <div id="avgCharts" class="row">
                   <div class="col-md-6 col-sm-6">
+                    <h4>Mood level:</h4>
+                    <span id="moodMeterLbl">0%</span>
+                    <br/>
                     <canvas id="moodChart" class="avgChart"></canvas>
                   </div>
                   <div class="col-md-6 col-sm-6">
+                    <h4>Average Emotions:</h4>
+                    <span id="averageEmotions"></span>
+                    <br/>
                     <canvas id="emotionsChart" class="avgChart"></canvas>
                   </div>
                 </div>

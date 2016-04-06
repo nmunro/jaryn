@@ -48,7 +48,7 @@ const App = Object.freeze(Object.create({
   },
 
   "setSevenDayAverageMood": function(val) {
-    document.querySelector("#moodMeter").value = val*10;
+    //document.querySelector("#moodMeter").value = val*10;
     document.querySelector("#moodMeterLbl").innerHTML = `${Math.floor(val*10)}%`;
     App.drawMoodChart(Math.floor(val*10));
   },
