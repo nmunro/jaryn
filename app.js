@@ -48,7 +48,6 @@ const App = Object.freeze(Object.create({
   },
 
   "setSevenDayAverageMood": function(val) {
-    //document.querySelector("#moodMeter").value = val*10;
     document.querySelector("#moodMeterLbl").innerHTML = `${Math.floor(val*10)}%`;
     App.drawMoodChart(Math.floor(val*10));
   },
@@ -254,6 +253,7 @@ const App = Object.freeze(Object.create({
     this.hideNavAll();
     this.showDiv(document.querySelector("#dashboardDiv"));
     this.showNav(document.querySelector("#dashboardNav").parentNode);
+    //document.querySelector("#networkStatus").innerHTML = Net.getNetworkStatus();
 
     VFS.loadConfig((conf) => VFS.getSevenDayHistory((d) => this.showHistory(d)));
   }

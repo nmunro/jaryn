@@ -55,8 +55,6 @@ const writeJSON = (obj) => {
 };
 
 const VFS = Object.freeze(Object.create({
-  "readJSON": readJSON,
-  "writeJSON": writeJSON,
   /**
    * loadConfig loads a config object from the config file and passes the
    * config into the callback.

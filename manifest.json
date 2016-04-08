@@ -12,7 +12,8 @@
   },
   
   "permissions": [
-    "syncFileSystem",
+    "storage",
+    "syncFileSystem", 
     {
       "fileSystem": [ "write" ]
     }
