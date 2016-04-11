@@ -97,7 +97,7 @@ const App = Object.freeze(Object.create({
     const {year, month, day} = DateUtil.getYYYYMMDD();
     Array.from(document.querySelectorAll(".emotion")).forEach((e) => e.checked = false);
     document.querySelector("#exercise").checked = false;
-    document.querySelector("#notes").innerHTML = "";
+    document.querySelector("#notes").value = "";
     document.querySelector("#mood").value = "0";
     document.querySelector("#moodValue").innerHTML = "0%";
     document.querySelector("#editDate").innerHTML = `${day}/${month}/${year}`;
@@ -187,7 +187,7 @@ const App = Object.freeze(Object.create({
           break;
 
         case "notes":
-          document.querySelector("#notes").innerHTML = cell.innerHTML;
+          document.querySelector("#notes").value = cell.innerHTML;
           break;
 
         case "exercise":
