@@ -2,17 +2,17 @@
   "name": "Jaryn",
   "description": "A wellness mood/feeling monitoring app.",
   "homepage": "http://github.com/nmunro/jaryn",
+  "author": "Neil Munro",
+  "private": true,
   "keywords": [
     "wellness",
     "mindfulness",
     "mood",
     "emotions"
   ],
-  "author": "Neil Munro",
-  "private": true,
   "dependencies": {
     "jquery": "jquery/jquery#^2.2.2",
     "bootstrap": "twbs/bootstrap#^3.3.6",
-    "awesome-pie-chart": "^0.3.0"
+    "canvasjs": "Tsur/canvasjs#^1.8.1"
   }
 }

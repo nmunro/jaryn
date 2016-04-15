@@ -48,7 +48,6 @@ const App = Object.freeze(Object.create({
   },
 
   "setSevenDayAverageMood": function(val) {
-    document.querySelector("#moodMeterLbl").innerHTML = `${Math.floor(val*10)}%`;
     App.drawMoodChart(Math.floor(val*10));
   },
 
@@ -62,14 +61,11 @@ const App = Object.freeze(Object.create({
         // This is the end of both inner and outer loops.
         if(c1 === a1.length-1 && c2 === a2.length-1) {
           const total = Object.keys(obj).map((elm) => obj[elm]).reduce((p, n) => p + n.count, 0);
-          const emotions = document.querySelector("#averageEmotions");
           const exercise = document.querySelector("#exercise");
 
-          emotions.innerHTML = "";
           Object.keys(obj).map((emotion) => {
             const percent = Math.round((obj[emotion].count / total) * 100);
             obj[emotion].percent = percent;
-            emotions.innerHTML += `${emotion}: ${percent}%&nbsp;|&nbsp;`;
           });
           
           App.drawEmotionsChart(obj);
@@ -79,20 +75,59 @@ const App = Object.freeze(Object.create({
   },
   
   "drawEmotionsChart": function(emotions) {
-    const data = Object.keys(emotions).map((emotion) => { return { "value": emotions[emotion].percent }; });
-    const emotionsCTX = document.querySelector("#emotionsChart").getContext("2d");  
-    const dn = new Chart(emotionsCTX).Doughnut(data, {});  
+    var chart;
+    const data = Object.keys(emotions).map((emotion) => {
+      return {
+        "y": emotions[emotion].count,
+        "label": `${emotion.toUpperCase()}`
+      };
+    });
+    
+    chart = new CanvasJS.Chart("emotionsChart", {
+      "animationEnabled": true,
+      "title": {
+        "text": "Emotions",
+        "verticalAlign": "top",
+      },
+      "data": [
+        {
+          "type": "doughnut",
+          "startAngle": 0,
+          "toolTipContent": "{label}: {y} - <strong>#percent%</strong>",
+          "indexLabel": "{label} #percent%",
+          "dataPoints": data
+        }
+      ]
+    });
+    chart.render();
   },
   
   "drawMoodChart": function(mood) {
+    var chart;
     const data = [
-      { "value": mood, "color": "green", "label": `${mood}%` },
-      { "value": 100-mood, "color": "red", "label": `${100-mood}%` }
+      { "y": mood, "label": `POSITIVE` },
+      { "y": 100-mood, "label": `NEGATIVE` }
     ];
-    const moodCTX = document.querySelector("#moodChart").getContext("2d");  
-    const dn = new Chart(moodCTX).Doughnut(data, {});
+    
+    chart = new CanvasJS.Chart("moodChart", {
+      "animationEnabled": true,
+      "title": {
+        "text": "Mood",
+        "verticalAlign": "top",
+      },
+      "data": [
+        {
+          "type": "doughnut",
+          "startAngle": 0,
+          "toolTipContent": "{label}: {y} - <strong>#percent%</strong>",
+          "indexLabel": "{label} #percent%",
+          "dataPoints": data
+        }
+      ]
+    });
+    chart.render();
   },
-
+  
   "clearHistoryEntry": function() {
     const {year, month, day} = DateUtil.getYYYYMMDD();
     Array.from(document.querySelectorAll(".emotion")).forEach((e) => e.checked = false);

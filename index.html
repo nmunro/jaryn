@@ -14,7 +14,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Jaryn:&nbsp;<span id="networkStatus"></span></a>
+          <a class="navbar-brand" href="#">Jaryn<span id="networkStatus"></span></a>
         </div>
       </div>
     </nav>
@@ -45,16 +45,10 @@
               <div role="tabpanel" class="tab-pane" id="charts">
                 <div id="avgCharts" class="row">
                   <div class="col-md-6 col-sm-6">
-                    <h4>Mood level:</h4>
-                    <span id="moodMeterLbl">0%</span>
-                    <br/>
-                    <canvas id="moodChart" class="avgChart"></canvas>
+                    <div id="moodChart" class="avgChart"></div>
                   </div>
                   <div class="col-md-6 col-sm-6">
-                    <h4>Average Emotions:</h4>
-                    <span id="averageEmotions"></span>
-                    <br/>
-                    <canvas id="emotionsChart" class="avgChart"></canvas>
+                    <div id="emotionsChart" class="avgChart"></div>
                   </div>
                 </div>
               </div>
@@ -182,7 +176,7 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/Chart.js/Chart.min.js"></script>
+    <script src="bower_components/canvasjs/dist/canvasjs.min.js"></script>
     <script src="dateUtil.js"></script>
     <script src="vfs.js"></script>
     <script src="net.js"></script>
