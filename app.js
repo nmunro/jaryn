@@ -74,8 +74,21 @@ const App = Object.freeze(Object.create({
     });
   },
   
+  buildChart: function(obj) {
+    return new CanvasJS.Chart(obj.node, {
+      "animationEnabled": true,
+      "title": { "text": obj.title, "verticalAlign": "top" },
+      "data": [{
+        "type": "doughnut",
+        "startAngle": 0,
+        "toolTipContent": "{label}: {y} - <strong>#percent%</strong>",
+        "indexLabel": "{label} #percent%",
+        "dataPoints": obj.data
+      }]   
+    });
+  },
+  
   "drawEmotionsChart": function(emotions) {
-    var chart;
     const data = Object.keys(emotions).map((emotion) => {
       return {
         "y": emotions[emotion].count,
@@ -83,23 +96,7 @@ const App = Object.freeze(Object.create({
       };
     });
     
-    chart = new CanvasJS.Chart("emotionsChart", {
-      "animationEnabled": true,
-      "title": {
-        "text": "Emotions",
-        "verticalAlign": "top",
-      },
-      "data": [
-        {
-          "type": "doughnut",
-          "startAngle": 0,
-          "toolTipContent": "{label}: {y} - <strong>#percent%</strong>",
-          "indexLabel": "{label} #percent%",
-          "dataPoints": data
-        }
-      ]
-    });
-    chart.render();
+    this.buildChart({"node": "emotionsChart", "title": "Emotions", "data": data}).render(); 
   },
   
   "drawMoodChart": function(mood) {
@@ -109,23 +106,7 @@ const App = Object.freeze(Object.create({
       { "y": 100-mood, "label": `NEGATIVE` }
     ];
     
-    chart = new CanvasJS.Chart("moodChart", {
-      "animationEnabled": true,
-      "title": {
-        "text": "Mood",
-        "verticalAlign": "top",
-      },
-      "data": [
-        {
-          "type": "doughnut",
-          "startAngle": 0,
-          "toolTipContent": "{label}: {y} - <strong>#percent%</strong>",
-          "indexLabel": "{label} #percent%",
-          "dataPoints": data
-        }
-      ]
-    });
-    chart.render();
+    this.buildChart({"node": "moodChart", "title": "Moods", "data": data}).render(); 
   },
   
   "clearHistoryEntry": function() {
