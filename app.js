@@ -92,7 +92,7 @@ const App = Object.freeze(Object.create({
     const data = Object.keys(emotions).map((emotion) => {
       return {
         "y": emotions[emotion].count,
-        "label": `${emotion.toUpperCase()}`
+        "label": emotion.toUpperCase()
       };
     });
     
@@ -269,11 +269,13 @@ const App = Object.freeze(Object.create({
     this.hideNavAll();
     this.showDiv(document.querySelector("#dashboardDiv"));
     this.showNav(document.querySelector("#dashboardNav").parentNode);
-    //document.querySelector("#networkStatus").innerHTML = Net.getNetworkStatus();
+    document.querySelector("#networkStatus").innerHTML = Net.getNetworkStatus();
 
     VFS.loadConfig((conf) => VFS.getSevenDayHistory((d) => this.showHistory(d)));
   }
 }));
 
-App.setupEventHandlers();
-App.init();
+$(document).ready(() => {
+  App.setupEventHandlers();
+  App.init();
+});
