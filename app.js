@@ -63,7 +63,7 @@ const App = Object.freeze(Object.create({
           const total = Object.keys(obj).map((elm) => obj[elm]).reduce((p, n) => p + n.count, 0);
           const exercise = document.querySelector("#exercise");
 
-          Object.keys(obj).map((emotion) => {
+          Object.keys(obj).forEach((emotion) => {
             const percent = Math.round((obj[emotion].count / total) * 100);
             obj[emotion].percent = percent;
           });
@@ -244,6 +244,7 @@ const App = Object.freeze(Object.create({
       feelings.setAttribute("data-name", "feelings");
       notes.setAttribute("data-name", "notes");
       exercise.setAttribute("data-name", "exercise");
+      exercise.setAttribute("class", obj.exercise ? "success": "warning");
 
       row.appendChild(date);
       row.appendChild(mood);
