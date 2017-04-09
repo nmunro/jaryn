@@ -1,0 +1,30 @@
+{
+  "name": "jaryn",
+  "version": "1.0.0",
+  "description": "A mood/feelings diary.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wellness",
+    "mindfulness",
+    "mood",
+    "emotions"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nmunro/jaryn.git"
+  },
+  "author": "Neil Munro (nmunro)",
+  "license": "AGPL",
+  "bugs": {
+    "url": "https://github.com/nmunro/jaryn/issues"
+  },
+  "private": true,
+  "homepage": "https://github.com/nmunro/jaryn#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1"
+  }
+}
